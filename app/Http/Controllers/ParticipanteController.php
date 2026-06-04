@@ -27,7 +27,8 @@ class ParticipanteController extends Controller
         }
         
         $participantes = $query->orderBy('id_participante', 'desc')->paginate(10);
-        $programas = Programa::all();
+        // SOLO PROGRAMAS ACTIVOS
+        $programas = Programa::where('estado', 'activo')->get();
         $escuelas = Escuela::all();
         
         return view('participantes.index', compact('participantes', 'programas', 'escuelas'));
@@ -49,25 +50,25 @@ class ParticipanteController extends Controller
         return response()->json(['success' => true, 'participante' => $participante]);
     }
 
-public function destroy($id)
-{
-    $inscripcionesActivas = Inscripcion::where('id_participante', $id)
-        ->where('estado', 'activo')
-        ->count();
-    
-    if ($inscripcionesActivas > 0) {
-        return response()->json([
-            'success' => false, 
-            'message' => 'No se puede eliminar porque tiene inscripciones ACTIVAS. Cambie el estado a Finalizado o Cancelado primero.'
-        ], 400);
+    public function destroy($id)
+    {
+        $inscripcionesActivas = Inscripcion::where('id_participante', $id)
+            ->where('estado', 'activo')
+            ->count();
+        
+        if ($inscripcionesActivas > 0) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'No se puede eliminar porque tiene inscripciones ACTIVAS. Cambie el estado a Finalizado o Cancelado primero.'
+            ], 400);
+        }
+        
+        Inscripcion::where('id_participante', $id)->delete();
+        $participante = Participante::findOrFail($id);
+        $participante->delete();
+        
+        return response()->json(['success' => true]);
     }
-    
-    Inscripcion::where('id_participante', $id)->delete();
-    $participante = Participante::findOrFail($id);
-    $participante->delete();
-    
-    return response()->json(['success' => true]);
-}
 
     public function show($id)
     {
@@ -91,6 +92,15 @@ public function destroy($id)
                 'tipo_inscripcion' => 'required|in:escolar,sabatino,externo',
                 'id_escuela' => 'nullable|required_if:tipo_inscripcion,escolar|exists:escuelas_beneficiarias,id_escuela'
             ]);
+            
+            // Validar que el programa esté ACTIVO
+            $programa = Programa::find($request->id_programa);
+            if ($programa && $programa->estado !== 'activo') {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'No se puede inscribir porque el programa no está activo'
+                ], 400);
+            }
             
             // Verificar si ya está inscrito en ese programa
             $existe = Inscripcion::where('id_participante', $request->id_participante)

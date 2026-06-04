@@ -10,15 +10,16 @@ use Illuminate\Http\Request;
 
 class InscripcionController extends Controller
 {
-    public function index()
-    {
-        $inscripciones = Inscripcion::with(['participante', 'programa', 'escuela'])->get();
-        $participantes = Participante::all();
-        $programas = Programa::all();
-        $escuelas = Escuela::all();
-        
-        return view('inscripciones.index', compact('inscripciones', 'participantes', 'programas', 'escuelas'));
-    }
+   public function index()
+{
+    $inscripciones = Inscripcion::with(['participante', 'programa', 'escuela'])->get();
+    $participantes = Participante::all();
+    // SOLO PROGRAMAS ACTIVOS
+    $programas = Programa::where('estado', 'activo')->get();
+    $escuelas = Escuela::all();
+    
+    return view('inscripciones.index', compact('inscripciones', 'participantes', 'programas', 'escuelas'));
+}
 
     public function store(Request $request)
     {

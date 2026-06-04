@@ -182,12 +182,14 @@
 
 <!-- Modal Eliminar -->
 <div id="modalEliminar" class="modal-overlay">
-    <div class="modal-container modal-eliminar" style="width: 400px;">
-        <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #f0ad4e; margin-bottom: 10px;"></i>
-        <h3 style="margin-bottom: 8px;">¿Eliminar participante?</h3>
-        <p id="eliminarMensaje" style="color: #6c7a8a; margin-bottom: 15px;">Esta acción no se puede deshacer</p>
+    <div class="modal-container modal-eliminar" style="width: 380px; text-align: center;">
+        <div style="margin-bottom: 15px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f0ad4e;"></i>
+        </div>
+        <h3 style="margin-bottom: 10px; font-size: 18px;">¿Eliminar participante?</h3>
+        <p style="color: #6c7a8a; margin-bottom: 20px;">Esta acción no se puede deshacer</p>
         <div style="display: flex; gap: 10px; justify-content: center;">
-            <button id="cancelarEliminar" class="btn-cancelar">Cancelar</button>
+            <button id="cancelarEliminar" class="btn-cancelar" style="padding: 8px 20px;">Cancelar</button>
             <button id="confirmarEliminar" class="btn-eliminar-confirmar" style="background: #dc3545; color: white; padding: 8px 20px; border: none; border-radius: 6px; cursor: pointer;">Eliminar</button>
         </div>
     </div>
