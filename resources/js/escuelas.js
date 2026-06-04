@@ -85,13 +85,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    location.reload();
+                    showNotification(isEdit ? 'Escuela actualizada con éxito' : 'Escuela creada con éxito', 'success');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + JSON.stringify(result));
+                    showNotification('Error al guardar la escuela', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error al guardar la escuela');
+                showNotification('Error al guardar la escuela', 'error');
             }
         });
     }
@@ -123,7 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const result = await response.json();
             if (result.success) {
-                location.reload();
+                showNotification('Escuela eliminada con éxito', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification('Error al eliminar la escuela', 'error');
             }
         });
     }

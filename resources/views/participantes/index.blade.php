@@ -10,9 +10,11 @@
 <div>
     <div class="participantes-header">
         <h1><i class="fas fa-users"></i> Participantes</h1>
-        <button id="btnNuevo" class="btn-nuevo">
-            <i class="fas fa-plus"></i> Nuevo Participante
-        </button>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar por ID, nombre, apellido..." value="{{ request('search') }}">
+            <button id="btnBuscar"><i class="fas fa-search"></i> Buscar</button>
+            <button id="btnLimpiar" style="background: #6c7a8a;"><i class="fas fa-times"></i> Limpiar</button>
+        </div>
     </div>
 
     <div class="participantes-table-container">
@@ -38,10 +40,16 @@
                     <td>{{ $participante->telefono ?? '-' }}</td>
                     <td>{{ $participante->correo ?? '-' }}</td>
                     <td style="text-align: center">
-                        <button class="btn-accion btn-editar" data-id="{{ $participante->id_participante }}">
+                        <button class="btn-accion btn-ver" data-id="{{ $participante->id_participante }}" title="Ver inscripciones" style="color: #17a2b8;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-accion btn-inscribir" data-id="{{ $participante->id_participante }}" title="Inscribir en otro programa" style="color: #28a745;">
+                            <i class="fas fa-plus-circle"></i>
+                        </button>
+                        <button class="btn-accion btn-editar" data-id="{{ $participante->id_participante }}" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn-accion btn-eliminar" data-id="{{ $participante->id_participante }}">
+                        <button class="btn-accion btn-eliminar" data-id="{{ $participante->id_participante }}" title="Eliminar">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -50,13 +58,17 @@
             </tbody>
         </table>
     </div>
+    
+    <div class="pagination">
+        {{ $participantes->appends(['search' => request('search')])->links() }}
+    </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Editar Participante -->
 <div id="modalParticipante" class="modal-overlay">
     <div class="modal-container">
         <div class="modal-header">
-            <h2 id="modalTitulo"><i class="fas fa-plus-circle"></i> Nuevo Participante</h2>
+            <h2 id="modalTitulo"><i class="fas fa-edit"></i> Editar Participante</h2>
             <button id="cerrarModal" class="modal-close">&times;</button>
         </div>
         <form id="formParticipante">
@@ -103,18 +115,101 @@
     </div>
 </div>
 
-<!-- Modal Eliminar -->
-<div id="modalEliminar" class="modal-overlay">
-    <div class="modal-container modal-eliminar">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h3>¿Eliminar participante?</h3>
-        <p>Esta acción no se puede deshacer</p>
-        <div class="modal-buttons" style="justify-content: center;">
-            <button id="cancelarEliminar" class="btn-cancelar">Cancelar</button>
-            <button id="confirmarEliminar" class="btn-eliminar-confirmar">Eliminar</button>
+<!-- Modal Ver Inscripciones -->
+<div id="modalVerInscripciones" class="modal-overlay">
+    <div class="modal-container" style="width: 550px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-list"></i> Programas del Participante</h2>
+            <button id="cerrarVerModal" class="modal-close">&times;</button>
+        </div>
+        <div id="inscripcionesList" class="inscripciones-list">
+            <!-- Las inscripciones se cargan aquí -->
         </div>
     </div>
 </div>
+
+<!-- Modal Nueva Inscripción -->
+<div id="modalNuevaInscripcion" class="modal-overlay">
+    <div class="modal-container" style="width: 500px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-plus-circle"></i> Nueva Inscripción</h2>
+            <button id="cerrarNuevaModal" class="modal-close">&times;</button>
+        </div>
+        <form id="formNuevaInscripcion">
+            @csrf
+            <input type="hidden" id="nueva_insc_participante_id" name="id_participante">
+            
+            <div class="form-group">
+                <label>Programa *</label>
+                <select id="nueva_insc_programa" name="id_programa" required>
+                    <option value="">Seleccionar programa</option>
+                    @foreach($programas as $programa)
+                        <option value="{{ $programa->id_programa }}">{{ $programa->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo de Inscripción *</label>
+                <select id="nueva_insc_tipo" name="tipo_inscripcion" required>
+                    <option value="escolar">Escolar</option>
+                    <option value="sabatino">Sabatino</option>
+                    <option value="externo">Externo</option>
+                </select>
+            </div>
+            
+            <div id="nueva_escuela_group" class="form-group">
+                <label>Escuela</label>
+                <select id="nueva_insc_escuela" name="id_escuela">
+                    <option value="">Seleccionar escuela</option>
+                    @foreach($escuelas as $escuela)
+                        <option value="{{ $escuela->id_escuela }}">{{ $escuela->nombre_escuela }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="button" id="cancelarNuevaModal" class="btn-cancelar">Cancelar</button>
+                <button type="button" id="btnGuardarNuevaInscripcion" class="btn-guardar">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div id="modalEliminar" class="modal-overlay">
+    <div class="modal-container modal-eliminar" style="width: 350px;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #f0ad4e; margin-bottom: 10px;"></i>
+        <h3 style="margin-bottom: 8px;">¿Eliminar participante?</h3>
+        <p style="color: #6c7a8a; margin-bottom: 15px;">Esta acción no se puede deshacer</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="cancelarEliminar" class="btn-cancelar">Cancelar</button>
+            <button id="confirmarEliminar" class="btn-eliminar-confirmar" style="background: #dc3545; color: white; padding: 8px 20px; border: none; border-radius: 6px; cursor: pointer;">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mostrar/ocultar campo escuela según tipo de inscripción
+    const nuevaTipoSelect = document.getElementById('nueva_insc_tipo');
+    const nuevaEscuelaGroup = document.getElementById('nueva_escuela_group');
+    
+    function toggleNuevaEscuelaField() {
+        if (nuevaTipoSelect && nuevaTipoSelect.value === 'escolar') {
+            nuevaEscuelaGroup.style.display = 'block';
+            document.getElementById('nueva_insc_escuela').required = true;
+        } else if (nuevaEscuelaGroup) {
+            nuevaEscuelaGroup.style.display = 'none';
+            if (document.getElementById('nueva_insc_escuela')) {
+                document.getElementById('nueva_insc_escuela').required = false;
+            }
+        }
+    }
+    
+    if (nuevaTipoSelect) {
+        nuevaTipoSelect.addEventListener('change', toggleNuevaEscuelaField);
+    }
+</script>
 @endsection
 
 @section('scripts')

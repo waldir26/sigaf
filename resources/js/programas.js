@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelarEliminar.addEventListener('click', cerrarModales);
     }
 
-    // Evento para guardar (crear o editar)
     if (btnGuardar) {
         btnGuardar.addEventListener('click', async function() {
             const id = document.getElementById('programa_id').value;
@@ -86,13 +85,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    location.reload();
+                    showNotification(isEdit ? 'Programa actualizado con éxito' : 'Programa creado con éxito', 'success');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + JSON.stringify(result));
+                    showNotification('Error al guardar el programa', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error al guardar el programa');
+                showNotification('Error al guardar el programa', 'error');
             }
         });
     }
@@ -124,7 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const result = await response.json();
             if (result.success) {
-                location.reload();
+                showNotification('Programa eliminado con éxito', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification('Error al eliminar el programa', 'error');
             }
         });
     }

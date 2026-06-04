@@ -42,6 +42,9 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/participantes/{id}', [ParticipanteController::class, 'show'])->name('participantes.show');
     Route::put('/participantes/{id}', [ParticipanteController::class, 'update'])->name('participantes.update');
     Route::delete('/participantes/{id}', [ParticipanteController::class, 'destroy'])->name('participantes.destroy');
+    
+    // ========== NUEVA INSCRIPCIÓN DESDE PARTICIPANTE ==========
+    Route::post('/participantes/inscripcion', [ParticipanteController::class, 'addInscripcion'])->name('participantes.addInscripcion');
 
     // ========== INSCRIPCIONES ==========
     Route::get('/inscripciones', [InscripcionController::class, 'index'])->name('inscripciones.index');

@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('fecha_inscripcion').value = new Date().toISOString().split('T')[0];
             document.getElementById('estado').value = 'activo';
             document.getElementById('tipo_inscripcion').value = 'escolar';
-            // Mostrar sección de participante
             if (participanteSection) {
                 participanteSection.style.display = 'block';
             }
@@ -43,11 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('id_escuela').value = data.id_escuela || '';
             document.getElementById('fecha_inscripcion').value = data.fecha_inscripcion || '';
             document.getElementById('estado').value = data.estado;
-            // Ocultar sección de participante en edición
             if (participanteSection) {
                 participanteSection.style.display = 'none';
             }
-            // Trigger para mostrar/ocultar escuela
             const event = new Event('change');
             document.getElementById('tipo_inscripcion').dispatchEvent(event);
         }
@@ -87,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
             let method;
             
             if (isEdit) {
-                // Edición: solo datos de inscripción
                 data = {
                     id_programa: document.getElementById('id_programa').value,
                     tipo_inscripcion: document.getElementById('tipo_inscripcion').value,
@@ -99,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 url = `/inscripciones/${id}`;
                 method = 'PUT';
             } else {
-                // Creación: datos del participante + inscripción
                 data = {
                     nombres: document.getElementById('nombres').value,
                     apellidos: document.getElementById('apellidos').value,
@@ -129,13 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    location.reload();
+                    showNotification(isEdit ? 'Inscripción actualizada con éxito' : 'Inscripción creada con éxito', 'success');
+                    setTimeout(() => location.reload(), 1000);
                 } else {
-                    alert('Error: ' + JSON.stringify(result));
+                    showNotification(result.message || 'Error al guardar la inscripción', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error al guardar la inscripción');
+                showNotification('Error al guardar la inscripción', 'error');
             }
         });
     }
@@ -167,7 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             const result = await response.json();
             if (result.success) {
-                location.reload();
+                showNotification('Inscripción eliminada con éxito', 'success');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showNotification('Error al eliminar la inscripción', 'error');
             }
         });
     }

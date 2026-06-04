@@ -126,7 +126,7 @@
 .modal-container {
     background: var(--blanco);
     border-radius: 16px;
-    width: 550px;
+    width: 500px;
     max-width: 90%;
     padding: 25px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -156,92 +156,11 @@
     color: var(--gris-medio);
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: var(--gris-oscuro);
-}
-
-.form-group select,
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: inherit;
-}
-
-.form-group select:focus,
-.form-group input:focus {
-    outline: none;
-    border-color: var(--azul-marino);
-}
-
-.form-row {
-    display: flex;
-    gap: 15px;
-}
-
-.form-row .form-group {
-    flex: 1;
-}
-
 .modal-buttons {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
     margin-top: 20px;
-}
-
-.btn-cancelar {
-    background: var(--gris-medio);
-    color: var(--blanco);
-    padding: 8px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.btn-guardar {
-    background: var(--azul-marino);
-    color: var(--blanco);
-    padding: 8px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.modal-eliminar {
-    text-align: center;
-}
-
-.modal-eliminar i {
-    font-size: 50px;
-    color: #f0ad4e;
-    margin-bottom: 15px;
-}
-
-.modal-eliminar h3 {
-    margin-bottom: 10px;
-}
-
-.modal-eliminar p {
-    color: var(--gris-medio);
-    margin-bottom: 20px;
-}
-
-.btn-eliminar-confirmar {
-    background: #dc3545;
-    color: var(--blanco);
-    padding: 8px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
 body.dark-mode .inscripciones-table-container {
@@ -261,8 +180,8 @@ body.dark-mode .form-group label {
     color: rgba(255, 255, 255, 0.8);
 }
 
-body.dark-mode .form-group select,
-body.dark-mode .form-group input {
+body.dark-mode .form-group input,
+body.dark-mode .form-group select {
     background: #2d2d3f;
     border-color: rgba(255, 255, 255, 0.1);
     color: white;

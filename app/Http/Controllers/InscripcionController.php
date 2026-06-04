@@ -22,16 +22,13 @@ class InscripcionController extends Controller
 
     public function store(Request $request)
     {
-        // Validar datos del participante e inscripción
         $request->validate([
-            // Datos del participante
             'nombres' => 'required|max:150',
             'apellidos' => 'required|max:150',
             'edad' => 'nullable|integer|min:0|max:120',
             'telefono' => 'nullable|max:20',
             'correo' => 'nullable|email|max:150',
             'direccion' => 'nullable',
-            // Datos de inscripción
             'id_programa' => 'required|exists:programas,id_programa',
             'fecha_inscripcion' => 'nullable|date',
             'estado' => 'required|in:activo,finalizado,cancelado',
