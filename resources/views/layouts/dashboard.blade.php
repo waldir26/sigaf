@@ -25,7 +25,7 @@
                     <i class="fas fa-chalkboard"></i>
                     <span>Programas</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('escuelas.index') }}" class="menu-item">
                     <i class="fas fa-school"></i>
                     <span>Escuelas Beneficiarias</span>
                 </a>

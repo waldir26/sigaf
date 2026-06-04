@@ -11,6 +11,11 @@ class Participante extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nombres', 'apellidos', 'edad', 'telefono', 'correo', 'direccion'
+        'nombres',
+        'apellidos',
+        'edad',
+        'telefono',
+        'correo',
+        'direccion'
     ];
 }

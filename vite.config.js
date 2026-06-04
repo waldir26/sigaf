@@ -13,7 +13,9 @@ export default defineConfig({
                 'resources/js/dashboard.js',
                 'resources/js/app.js',
                 'resources/css/programas.css',
-                'resources/js/programas.js'
+                'resources/js/programas.js',
+                'resources/css/escuelas.css',
+                'resources/js/escuelas.js'
             ],
             refresh: true,
         }),
