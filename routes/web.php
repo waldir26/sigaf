@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\ParticipanteController;
+use App\Http\Controllers\InscripcionController;
 
 // Redirigir raíz al login
 Route::get('/', function () {
@@ -19,7 +20,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Ruta protegida
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth.custom')->name('dashboard');
 
-// Rutas de programas, escuelas y participantes
+// Rutas de programas, escuelas, participantes e inscripciones
 Route::middleware('auth.custom')->group(function () {
     // ========== PROGRAMAS ==========
     Route::get('/programas', [ProgramaController::class, 'index'])->name('programas.index');
@@ -41,4 +42,11 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/participantes/{id}', [ParticipanteController::class, 'show'])->name('participantes.show');
     Route::put('/participantes/{id}', [ParticipanteController::class, 'update'])->name('participantes.update');
     Route::delete('/participantes/{id}', [ParticipanteController::class, 'destroy'])->name('participantes.destroy');
+
+    // ========== INSCRIPCIONES ==========
+    Route::get('/inscripciones', [InscripcionController::class, 'index'])->name('inscripciones.index');
+    Route::post('/inscripciones', [InscripcionController::class, 'store'])->name('inscripciones.store');
+    Route::get('/inscripciones/{id}', [InscripcionController::class, 'show'])->name('inscripciones.show');
+    Route::put('/inscripciones/{id}', [InscripcionController::class, 'update'])->name('inscripciones.update');
+    Route::delete('/inscripciones/{id}', [InscripcionController::class, 'destroy'])->name('inscripciones.destroy');
 });

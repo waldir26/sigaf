@@ -17,7 +17,9 @@ export default defineConfig({
                 'resources/css/escuelas.css',
                 'resources/js/escuelas.js',
                 'resources/css/participantes.css',
-                'resources/js/participantes.js'
+                'resources/js/participantes.js',
+                'resources/css/inscripciones.css',
+                'resources/js/inscripciones.js'
             ],
             refresh: true,
         }),
