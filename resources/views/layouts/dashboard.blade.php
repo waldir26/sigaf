@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SIGAF - @yield('title')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/css/dashboard.css', 'resources/css/dark-mode.css'])
@@ -20,7 +21,7 @@
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('programas.index') }}" class="menu-item">
                     <i class="fas fa-chalkboard"></i>
                     <span>Programas</span>
                 </a>
@@ -29,12 +30,12 @@
                     <span>Escuelas Beneficiarias</span>
                 </a>
                 <a href="#" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Participantes</span>
-                </a>
-                <a href="#" class="menu-item">
                     <i class="fas fa-pen-alt"></i>
                     <span>Inscripciones</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Participantes</span>
                 </a>
                 <a href="#" class="menu-item">
                     <i class="fas fa-boxes"></i>

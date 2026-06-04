@@ -11,7 +11,9 @@ export default defineConfig({
                 'resources/css/dashboard.css',
                 'resources/css/dark-mode.css',
                 'resources/js/dashboard.js',
-                'resources/js/app.js'
+                'resources/js/app.js',
+                'resources/css/programas.css',
+                'resources/js/programas.js'
             ],
             refresh: true,
         }),

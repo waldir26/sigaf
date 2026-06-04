@@ -8,7 +8,7 @@
         <img src="{{ asset('images/logo.png') }}" alt="Logo FUSALMO">
     </div>
 
-    <h2>Bienvenido</h2>
+    <h2>Bienvenido/a</h2>
 
     @if($errors->any())
         <div class="error-message">
