@@ -49,18 +49,25 @@ class ParticipanteController extends Controller
         return response()->json(['success' => true, 'participante' => $participante]);
     }
 
-    public function destroy($id)
-    {
-        // Verificar si tiene inscripciones
-        $inscripciones = Inscripcion::where('id_participante', $id)->count();
-        if ($inscripciones > 0) {
-            return response()->json(['success' => false, 'message' => 'No se puede eliminar porque tiene inscripciones activas'], 400);
-        }
-        
-        $participante = Participante::findOrFail($id);
-        $participante->delete();
-        return response()->json(['success' => true]);
+public function destroy($id)
+{
+    $inscripcionesActivas = Inscripcion::where('id_participante', $id)
+        ->where('estado', 'activo')
+        ->count();
+    
+    if ($inscripcionesActivas > 0) {
+        return response()->json([
+            'success' => false, 
+            'message' => 'No se puede eliminar porque tiene inscripciones ACTIVAS. Cambie el estado a Finalizado o Cancelado primero.'
+        ], 400);
     }
+    
+    Inscripcion::where('id_participante', $id)->delete();
+    $participante = Participante::findOrFail($id);
+    $participante->delete();
+    
+    return response()->json(['success' => true]);
+}
 
     public function show($id)
     {

@@ -46,10 +46,10 @@
                         <button class="btn-accion btn-inscribir" data-id="{{ $participante->id_participante }}" title="Inscribir en otro programa" style="color: #28a745;">
                             <i class="fas fa-plus-circle"></i>
                         </button>
-                        <button class="btn-accion btn-editar" data-id="{{ $participante->id_participante }}" title="Editar">
+                        <button class="btn-accion btn-editar" data-id="{{ $participante->id_participante }}" title="Editar datos" style="color: #ffc107;">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn-accion btn-eliminar" data-id="{{ $participante->id_participante }}" title="Eliminar">
+                        <button class="btn-accion btn-eliminar" data-id="{{ $participante->id_participante }}" title="Eliminar" style="color: #dc3545;">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -64,9 +64,26 @@
     </div>
 </div>
 
-<!-- Modal Editar Participante -->
+<!-- Modal Ver Inscripciones (con cambio de estado) -->
+<div id="modalVerInscripciones" class="modal-overlay">
+    <div class="modal-container" style="width: 750px; max-width: 90%;">
+        <div class="modal-header">
+            <h2><i class="fas fa-list"></i> Programas del Participante</h2>
+            <button id="cerrarVerModal" class="modal-close">&times;</button>
+        </div>
+        <div id="inscripcionesList" style="max-height: 400px; overflow-y: auto;">
+            <!-- Las inscripciones se cargan aquí -->
+        </div>
+        <div class="modal-buttons" style="margin-top: 15px;">
+            <button type="button" id="cancelarVerModal" class="btn-cancelar">Cerrar</button>
+            <button type="button" id="guardarCambiosEstado" class="btn-guardar">Guardar Cambios de Estado</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Participante (solo datos personales) -->
 <div id="modalParticipante" class="modal-overlay">
-    <div class="modal-container">
+    <div class="modal-container" style="width: 550px; max-width: 90%;">
         <div class="modal-header">
             <h2 id="modalTitulo"><i class="fas fa-edit"></i> Editar Participante</h2>
             <button id="cerrarModal" class="modal-close">&times;</button>
@@ -109,22 +126,9 @@
             
             <div class="modal-buttons">
                 <button type="button" id="cancelarModal" class="btn-cancelar">Cancelar</button>
-                <button type="button" id="btnGuardarParticipante" class="btn-guardar">Guardar</button>
+                <button type="button" id="btnGuardarParticipante" class="btn-guardar">Guardar Cambios</button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Modal Ver Inscripciones -->
-<div id="modalVerInscripciones" class="modal-overlay">
-    <div class="modal-container" style="width: 550px;">
-        <div class="modal-header">
-            <h2><i class="fas fa-list"></i> Programas del Participante</h2>
-            <button id="cerrarVerModal" class="modal-close">&times;</button>
-        </div>
-        <div id="inscripcionesList" class="inscripciones-list">
-            <!-- Las inscripciones se cargan aquí -->
-        </div>
     </div>
 </div>
 
@@ -132,7 +136,7 @@
 <div id="modalNuevaInscripcion" class="modal-overlay">
     <div class="modal-container" style="width: 500px;">
         <div class="modal-header">
-            <h2><i class="fas fa-plus-circle"></i> Nueva Inscripción</h2>
+            <h2><i class="fas fa-plus-circle"></i> Inscribir en Programa</h2>
             <button id="cerrarNuevaModal" class="modal-close">&times;</button>
         </div>
         <form id="formNuevaInscripcion">
@@ -178,10 +182,10 @@
 
 <!-- Modal Eliminar -->
 <div id="modalEliminar" class="modal-overlay">
-    <div class="modal-container modal-eliminar" style="width: 350px;">
+    <div class="modal-container modal-eliminar" style="width: 400px;">
         <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #f0ad4e; margin-bottom: 10px;"></i>
         <h3 style="margin-bottom: 8px;">¿Eliminar participante?</h3>
-        <p style="color: #6c7a8a; margin-bottom: 15px;">Esta acción no se puede deshacer</p>
+        <p id="eliminarMensaje" style="color: #6c7a8a; margin-bottom: 15px;">Esta acción no se puede deshacer</p>
         <div style="display: flex; gap: 10px; justify-content: center;">
             <button id="cancelarEliminar" class="btn-cancelar">Cancelar</button>
             <button id="confirmarEliminar" class="btn-eliminar-confirmar" style="background: #dc3545; color: white; padding: 8px 20px; border: none; border-radius: 6px; cursor: pointer;">Eliminar</button>
@@ -190,7 +194,6 @@
 </div>
 
 <script>
-    // Mostrar/ocultar campo escuela según tipo de inscripción
     const nuevaTipoSelect = document.getElementById('nueva_insc_tipo');
     const nuevaEscuelaGroup = document.getElementById('nueva_escuela_group');
     
@@ -208,6 +211,7 @@
     
     if (nuevaTipoSelect) {
         nuevaTipoSelect.addEventListener('change', toggleNuevaEscuelaField);
+        toggleNuevaEscuelaField();
     }
 </script>
 @endsection
