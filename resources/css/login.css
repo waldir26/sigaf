@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #1a2a4f, #0f1a3a);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 45px 40px;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    text-align: center;
+    width: 100%;
+}
+
+.logo img {
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.login-card h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 500;
+    font-size: 22px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    color: rgba(255, 255, 255, 0.85);
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 42px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #1a2a4f;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.btn-login:hover {
+    transform: scale(1.02);
+    background: #f0f0f0;
+}
+
+.help-link {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.help-link a {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.help-link a:hover {
+    color: white;
+}
+
+.error-message {
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    text-align: center;
+}
