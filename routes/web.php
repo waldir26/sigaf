@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\EscuelaController;
+use App\Http\Controllers\ParticipanteController;
 
 // Redirigir raíz al login
 Route::get('/', function () {
@@ -18,19 +19,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Ruta protegida
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth.custom')->name('dashboard');
 
-// Rutas de programas y escuelas
+// Rutas de programas, escuelas y participantes
 Route::middleware('auth.custom')->group(function () {
-    // Programas
+    // ========== PROGRAMAS ==========
     Route::get('/programas', [ProgramaController::class, 'index'])->name('programas.index');
     Route::post('/programas', [ProgramaController::class, 'store'])->name('programas.store');
     Route::get('/programas/{id}', [ProgramaController::class, 'show'])->name('programas.show');
     Route::put('/programas/{id}', [ProgramaController::class, 'update'])->name('programas.update');
     Route::delete('/programas/{id}', [ProgramaController::class, 'destroy'])->name('programas.destroy');
 
-    // Escuelas Beneficiarias
+    // ========== ESCUELAS BENEFICIARIAS ==========
     Route::get('/escuelas', [EscuelaController::class, 'index'])->name('escuelas.index');
     Route::post('/escuelas', [EscuelaController::class, 'store'])->name('escuelas.store');
     Route::get('/escuelas/{id}', [EscuelaController::class, 'show'])->name('escuelas.show');
     Route::put('/escuelas/{id}', [EscuelaController::class, 'update'])->name('escuelas.update');
     Route::delete('/escuelas/{id}', [EscuelaController::class, 'destroy'])->name('escuelas.destroy');
+
+    // ========== PARTICIPANTES ==========
+    Route::get('/participantes', [ParticipanteController::class, 'index'])->name('participantes.index');
+    Route::post('/participantes', [ParticipanteController::class, 'store'])->name('participantes.store');
+    Route::get('/participantes/{id}', [ParticipanteController::class, 'show'])->name('participantes.show');
+    Route::put('/participantes/{id}', [ParticipanteController::class, 'update'])->name('participantes.update');
+    Route::delete('/participantes/{id}', [ParticipanteController::class, 'destroy'])->name('participantes.destroy');
 });

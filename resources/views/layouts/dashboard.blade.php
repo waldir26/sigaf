@@ -33,7 +33,7 @@
                     <i class="fas fa-pen-alt"></i>
                     <span>Inscripciones</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('participantes.index') }}" class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Participantes</span>
                 </a>
