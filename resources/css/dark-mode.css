@@ -1,0 +1,94 @@
+body.dark-mode {
+    background: #1e1e2e;
+}
+
+body.dark-mode .sidebar {
+    background: #1a1a2e;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .sidebar-logo {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .menu-item {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .menu-item i {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .menu-item span {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .menu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .menu-item:hover i,
+body.dark-mode .menu-item:hover span {
+    color: white;
+}
+
+body.dark-mode .menu-item.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: white;
+}
+
+body.dark-mode .menu-item.active i,
+body.dark-mode .menu-item.active span {
+    color: white;
+}
+
+body.dark-mode .sidebar-footer {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .logout-btn {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .logout-btn i {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .logout-btn:hover {
+    background: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+}
+
+body.dark-mode .logout-btn:hover i {
+    color: #ff6b6b;
+}
+
+body.dark-mode .top-navbar {
+    background: #1a1a2e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .datetime {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .user-info {
+    color: white;
+}
+
+body.dark-mode .user-info i {
+    color: white;
+}
+
+/* Contenido principal - gris claro */
+body.dark-mode .content-page {
+    background: #d7d7d7;
+}
+
+body.dark-mode .theme-toggle {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .theme-toggle:hover {
+    color: white;
+}
