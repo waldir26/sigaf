@@ -59,7 +59,16 @@
                 </a>
                 <a href="#" class="menu-item">
                     <i class="fas fa-money-bill-wave"></i>
-                    <span>Gastos</span>
+                    <span>Gestión Financiera </span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Reportes</span>
+                </a>
+
+                <a href="#" class="menu-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Transparencia financiera</span>
                 </a>
                 
                 <div class="menu-divider"></div>
