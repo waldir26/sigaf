@@ -37,7 +37,7 @@
                     <i class="fas fa-users"></i>
                     <span>Participantes</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('inventario.index') }}" class="menu-item">
                     <i class="fas fa-boxes"></i>
                     <span>Inventario</span>
                 </a>

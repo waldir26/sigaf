@@ -11,6 +11,9 @@ class Inventario extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nombre_producto', 'categoria', 'cantidad', 'estado'
+        'nombre_producto',
+        'categoria',
+        'cantidad',
+        'estado'
     ];
 }

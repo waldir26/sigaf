@@ -19,7 +19,9 @@ export default defineConfig({
                 'resources/css/participantes.css',
                 'resources/js/participantes.js',
                 'resources/css/inscripciones.css',
-                'resources/js/inscripciones.js'
+                'resources/js/inscripciones.js',
+                'resources/css/inventario.css',
+                'resources/js/inventario.js'
             ],
             refresh: true,
         }),

@@ -7,6 +7,8 @@ use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\ParticipanteController;
 use App\Http\Controllers\InscripcionController;
+use App\Http\Controllers\InventarioController;
+
 
 // Redirigir raíz al login
 Route::get('/', function () {
@@ -52,4 +54,12 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/inscripciones/{id}', [InscripcionController::class, 'show'])->name('inscripciones.show');
     Route::put('/inscripciones/{id}', [InscripcionController::class, 'update'])->name('inscripciones.update');
     Route::delete('/inscripciones/{id}', [InscripcionController::class, 'destroy'])->name('inscripciones.destroy');
+
+    // ========== INVENTARIO ==========
+Route::get('/inventario', [InventarioController::class, 'index'])->name('inventario.index');
+Route::post('/inventario', [InventarioController::class, 'store'])->name('inventario.store');
+Route::get('/inventario/{id}', [InventarioController::class, 'show'])->name('inventario.show');
+Route::put('/inventario/{id}', [InventarioController::class, 'update'])->name('inventario.update');
+Route::delete('/inventario/{id}', [InventarioController::class, 'destroy'])->name('inventario.destroy');
 });
+

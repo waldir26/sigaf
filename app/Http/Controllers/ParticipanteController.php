@@ -14,7 +14,9 @@ class ParticipanteController extends Controller
     {
         $query = Participante::query();
         
-        // Buscador
+        // ========== FILTROS ==========
+        
+        // Buscador por nombre, apellido, correo, teléfono
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -26,12 +28,75 @@ class ParticipanteController extends Controller
             });
         }
         
-        $participantes = $query->orderBy('id_participante', 'desc')->paginate(10);
-        // SOLO PROGRAMAS ACTIVOS
+        // Filtro por Programa (a través de inscripciones)
+        if ($request->has('programa_id') && $request->programa_id != '') {
+            $programaId = $request->programa_id;
+            $participantesIds = Inscripcion::where('id_programa', $programaId)
+                ->pluck('id_participante')
+                ->unique();
+            $query->whereIn('id_participante', $participantesIds);
+        }
+        
+        // Filtro por Tipo de inscripción (escolar, sabatino, externo)
+        if ($request->has('tipo_inscripcion') && $request->tipo_inscripcion != '') {
+            $tipo = $request->tipo_inscripcion;
+            $participantesIds = Inscripcion::where('tipo_inscripcion', $tipo)
+                ->pluck('id_participante')
+                ->unique();
+            $query->whereIn('id_participante', $participantesIds);
+        }
+        
+        // Filtro por Escuela (a través de inscripciones)
+        if ($request->has('escuela_id') && $request->escuela_id != '') {
+            $escuelaId = $request->escuela_id;
+            $participantesIds = Inscripcion::where('id_escuela', $escuelaId)
+                ->pluck('id_participante')
+                ->unique();
+            $query->whereIn('id_participante', $participantesIds);
+        }
+        
+        // ========== ORDENAMIENTO ==========
+        $orden = $request->get('orden', 'id_desc');
+        switch ($orden) {
+            case 'nombre_asc':
+                $query->orderBy('nombres', 'asc');
+                break;
+            case 'nombre_desc':
+                $query->orderBy('nombres', 'desc');
+                break;
+            case 'apellido_asc':
+                $query->orderBy('apellidos', 'asc');
+                break;
+            case 'apellido_desc':
+                $query->orderBy('apellidos', 'desc');
+                break;
+            case 'id_asc':
+                $query->orderBy('id_participante', 'asc');
+                break;
+            case 'id_desc':
+            default:
+                $query->orderBy('id_participante', 'desc');
+                break;
+        }
+        
+        // Paginación de 15 por página
+        $participantes = $query->paginate(15);
+        
+        // Datos para los filtros
         $programas = Programa::where('estado', 'activo')->get();
         $escuelas = Escuela::all();
         
-        return view('participantes.index', compact('participantes', 'programas', 'escuelas'));
+        // Contar participantes por escuela para la vista agrupada
+        $participantesPorEscuela = [];
+        $escuelasList = Escuela::all();
+        foreach ($escuelasList as $escuela) {
+            $participantesIds = Inscripcion::where('id_escuela', $escuela->id_escuela)
+                ->pluck('id_participante')
+                ->unique();
+            $participantesPorEscuela[$escuela->nombre_escuela] = Participante::whereIn('id_participante', $participantesIds)->count();
+        }
+        
+        return view('participantes.index', compact('participantes', 'programas', 'escuelas', 'participantesPorEscuela'));
     }
 
     public function update(Request $request, $id)
