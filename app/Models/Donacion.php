@@ -11,6 +11,17 @@ class Donacion extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_donante', 'tipo_donacion', 'monto', 'descripcion', 'fecha', 'comprobante'
+        'id_donante',
+        'tipo_donacion',
+        'monto',
+        'descripcion',
+        'fecha',
+        'documento_sellado',
+        'estado_sellado'
     ];
+
+    public function donante()
+    {
+        return $this->belongsTo(Donante::class, 'id_donante', 'id_donante');
+    }
 }

@@ -21,7 +21,9 @@ export default defineConfig({
                 'resources/css/inscripciones.css',
                 'resources/js/inscripciones.js',
                 'resources/css/inventario.css',
-                'resources/js/inventario.js'
+                'resources/js/inventario.js',
+                'resources/css/donaciones.css',
+                'resources/js/donaciones.js'
             ],
             refresh: true,
         }),

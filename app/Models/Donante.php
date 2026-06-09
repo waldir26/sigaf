@@ -11,6 +11,14 @@ class Donante extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nombre', 'telefono', 'correo', 'direccion'
+        'nombre',
+        'telefono',
+        'correo',
+        'direccion'
     ];
+
+    public function donaciones()
+    {
+        return $this->hasMany(Donacion::class, 'id_donante', 'id_donante');
+    }
 }

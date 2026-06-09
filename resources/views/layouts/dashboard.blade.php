@@ -41,9 +41,9 @@
                     <i class="fas fa-boxes"></i>
                     <span>Inventario</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-hand-holding-usd"></i>
-                    <span>Donantes</span>
+                <a href="{{ route('donaciones.index') }}" class="menu-item">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Donaciones</span>
                 </a>
                 <a href="#" class="menu-item">
                     <i class="fas fa-gift"></i>

@@ -8,6 +8,7 @@ use App\Http\Controllers\EscuelaController;
 use App\Http\Controllers\ParticipanteController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\DonacionController;
 
 
 // Redirigir raíz al login
@@ -56,10 +57,25 @@ Route::middleware('auth.custom')->group(function () {
     Route::delete('/inscripciones/{id}', [InscripcionController::class, 'destroy'])->name('inscripciones.destroy');
 
     // ========== INVENTARIO ==========
-Route::get('/inventario', [InventarioController::class, 'index'])->name('inventario.index');
-Route::post('/inventario', [InventarioController::class, 'store'])->name('inventario.store');
-Route::get('/inventario/{id}', [InventarioController::class, 'show'])->name('inventario.show');
-Route::put('/inventario/{id}', [InventarioController::class, 'update'])->name('inventario.update');
-Route::delete('/inventario/{id}', [InventarioController::class, 'destroy'])->name('inventario.destroy');
+    Route::get('/inventario', [InventarioController::class, 'index'])->name('inventario.index');
+    Route::post('/inventario', [InventarioController::class, 'store'])->name('inventario.store');
+    Route::get('/inventario/{id}', [InventarioController::class, 'show'])->name('inventario.show');
+    Route::put('/inventario/{id}', [InventarioController::class, 'update'])->name('inventario.update');
+    Route::delete('/inventario/{id}', [InventarioController::class, 'destroy'])->name('inventario.destroy');
+
+    // ========== DONACIONES ==========
+    Route::get('/donaciones', [DonacionController::class, 'index'])->name('donaciones.index');
+    Route::post('/donaciones', [DonacionController::class, 'store'])->name('donaciones.store');
+    Route::get('/donaciones/{id}', [DonacionController::class, 'show'])->name('donaciones.show');
+    Route::put('/donaciones/{id}', [DonacionController::class, 'update'])->name('donaciones.update');
+    Route::delete('/donaciones/{id}', [DonacionController::class, 'destroy'])->name('donaciones.destroy');
+    Route::get('/donaciones/{id}/pdf', [DonacionController::class, 'exportPdf'])->name('donaciones.pdf');
+    Route::get('/donaciones/exportar/reporte', [DonacionController::class, 'exportReporte'])->name('donaciones.reporte');
+
+    // ========== DONANTES ==========
+    Route::post('/donantes', [DonacionController::class, 'storeDonante'])->name('donantes.store');
+
+    //subir douemnto escanedo y sellado
+    Route::post('/donaciones/{id}/subir-sellado', [DonacionController::class, 'subirDocumentoSellado'])->name('donaciones.subirSellado');
 });
 
