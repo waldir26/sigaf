@@ -72,7 +72,7 @@
                 <div class="menu-divider"></div>
                 <div class="menu-section-title">Configuración</div>
 
-                <a href="#" class="menu-item">
+                <a href="{{ route('perfil.index') }}" class="menu-item">
                     <i class="fas fa-user-circle"></i>
                     <span>Perfil</span>
                 </a>
@@ -100,8 +100,13 @@
                 </button>
                 <div class="datetime" id="current-datetime"></div>
                 <div class="user-info">
+                    @php $usuario = session('usuario'); @endphp
+                    @if($usuario && $usuario->foto)
+                    <img src="{{ asset($usuario->foto) }}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                    @else
                     <i class="fas fa-user-circle"></i>
-                    <span>{{ session('usuario')->nombre ?? 'Usuario' }}</span>
+                    @endif
+                    <span>{{ $usuario->nombre ?? 'Usuario' }}</span>
                 </div>
             </nav>
 

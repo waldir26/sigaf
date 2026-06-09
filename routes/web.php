@@ -12,7 +12,7 @@ use App\Http\Controllers\DonacionController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\GastoController;
-
+use App\Http\Controllers\PerfilController;
 
 // Redirigir raíz al login
 Route::get('/', function () {
@@ -107,4 +107,8 @@ Route::middleware('auth.custom')->group(function () {
     Route::delete('/gastos/{id}', [GastoController::class, 'destroy'])->name('gastos.destroy');
     Route::get('/gastos/{id}/pdf', [GastoController::class, 'exportPdf'])->name('gastos.pdf');
     Route::get('/gastos/exportar/reporte', [GastoController::class, 'exportReporte'])->name('gastos.reporte');
+
+    // ========== PERFIL ==========
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index')->middleware('auth.custom');
+    Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update')->middleware('auth.custom');
 });
