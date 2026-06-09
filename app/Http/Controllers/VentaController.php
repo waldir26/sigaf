@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venta;
+use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
 use Spatie\LaravelPdf\Facades\Pdf;
 
@@ -66,6 +67,18 @@ class VentaController extends Controller
         ]);
 
         $venta = Venta::create($request->all());
+
+        // Insertar en movimientos_financieros
+        MovimientoFinanciero::create([
+            'tipo' => 'Ingreso',
+            'origen' => 'Venta',
+            'monto' => $venta->monto,
+            'fecha' => $venta->fecha,
+            'descripcion' => 'Venta de: ' . $venta->articulo,
+            'tabla_referencia' => 'ventas_bienes',
+            'id_referencia' => $venta->id_venta
+        ]);
+
         return response()->json(['success' => true, 'venta' => $venta]);
     }
 
@@ -79,12 +92,42 @@ class VentaController extends Controller
 
         $venta = Venta::findOrFail($id);
         $venta->update($request->all());
+
+        // Actualizar movimiento financiero
+        $movimiento = MovimientoFinanciero::where('tabla_referencia', 'ventas_bienes')
+            ->where('id_referencia', $venta->id_venta)
+            ->first();
+
+        if ($movimiento) {
+            $movimiento->update([
+                'monto' => $venta->monto,
+                'fecha' => $venta->fecha,
+                'descripcion' => 'Venta de: ' . $venta->articulo
+            ]);
+        } else {
+            MovimientoFinanciero::create([
+                'tipo' => 'Ingreso',
+                'origen' => 'Venta',
+                'monto' => $venta->monto,
+                'fecha' => $venta->fecha,
+                'descripcion' => 'Venta de: ' . $venta->articulo,
+                'tabla_referencia' => 'ventas_bienes',
+                'id_referencia' => $venta->id_venta
+            ]);
+        }
+
         return response()->json(['success' => true, 'venta' => $venta]);
     }
 
     public function destroy($id)
     {
         $venta = Venta::findOrFail($id);
+
+        // Eliminar movimiento financiero asociado
+        MovimientoFinanciero::where('tabla_referencia', 'ventas_bienes')
+            ->where('id_referencia', $venta->id_venta)
+            ->delete();
+
         $venta->delete();
         return response()->json(['success' => true]);
     }

@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('modalGasto');
     const modalEliminar = document.getElementById('modalEliminar');
-    const form = document.getElementById('formGasto');
     const btnNuevo = document.getElementById('btnNuevo');
     const btnNuevoEmpty = document.getElementById('btnNuevoEmpty');
     const btnGuardar = document.getElementById('btnGuardarGasto');
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalTitulo = document.getElementById('modalTitulo');
         if (titulo === 'crear') {
             modalTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Nuevo Gasto';
-            form.reset();
+            document.getElementById('formGasto').reset();
             document.getElementById('gasto_id').value = '';
             document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
         } else if (data) {
@@ -85,51 +84,54 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelarModal) cancelarModal.addEventListener('click', cerrarModales);
     if (cancelarEliminar) cancelarEliminar.addEventListener('click', cerrarModales);
 
-    if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function() {
-            const id = document.getElementById('gasto_id').value;
-            const isEdit = id && id !== '';
-            
-            const data = {
-                categoria: document.getElementById('categoria').value,
-                descripcion: document.getElementById('descripcion').value,
-                fecha: document.getElementById('fecha').value,
-                monto: document.getElementById('monto').value,
-                _token: document.querySelector('meta[name="csrf-token"]').content
-            };
-            
-            let url, method;
-            if (isEdit) {
-                url = `/gastos/${id}`;
-                method = 'PUT';
+    // Guardar Gasto
+    // Guardar Gasto (Crear o Editar)
+if (btnGuardar) {
+    btnGuardar.addEventListener('click', function() {
+        const id = document.getElementById('gasto_id').value;
+        const isEdit = id && id !== '';
+        
+        const categoria = document.getElementById('categoria').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const fecha = document.getElementById('fecha').value;
+        const monto = document.getElementById('monto').value;
+        
+        if (!categoria) { showNotification('La categoría es obligatoria', 'error'); return; }
+        if (!fecha) { showNotification('La fecha es obligatoria', 'error'); return; }
+        if (!monto || monto <= 0) { showNotification('El monto debe ser mayor a 0', 'error'); return; }
+        
+        let url = isEdit ? `/gastos/${id}` : '/gastos';
+        let method = isEdit ? 'PUT' : 'POST';
+        
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                categoria: categoria,
+                descripcion: descripcion,
+                fecha: fecha,
+                monto: parseFloat(monto)
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                showNotification(isEdit ? 'Gasto actualizado con éxito' : 'Gasto registrado con éxito', 'success');
+                setTimeout(() => location.reload(), 1000);
             } else {
-                url = '/gastos';
-                method = 'POST';
+                showNotification(result.message || 'Error al guardar', 'error');
             }
-            
-            try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    showNotification(isEdit ? 'Gasto actualizado con éxito' : 'Gasto registrado con éxito', 'success');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    showNotification('Error al guardar el gasto', 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showNotification('Error al guardar el gasto', 'error');
-            }
+        })
+        .catch(error => {
+            showNotification('Error de conexión', 'error');
         });
-    }
+    });
+}
 
+    // Editar, Eliminar, PDF
     document.body.addEventListener('click', async function(e) {
         const btnEditar = e.target.closest('.btn-editar');
         const btnEliminar = e.target.closest('.btn-eliminar');
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Gasto eliminado con éxito', 'success');
                 setTimeout(() => location.reload(), 1000);
             } else {
-                showNotification('Error al eliminar el gasto', 'error');
+                showNotification('Error al eliminar', 'error');
             }
         });
     }

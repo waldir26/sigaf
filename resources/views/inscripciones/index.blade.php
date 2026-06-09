@@ -72,7 +72,7 @@
         <form id="formInscripcion">
             @csrf
             <input type="hidden" id="inscripcion_id" name="inscripcion_id">
-            
+
             <!-- Datos del Participante -->
             <div id="participanteSection" style="background: #f5f7fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
                 <h3 style="color: #1a2a4f; margin-bottom: 10px; font-size: 13px; font-weight: 600;">
@@ -106,20 +106,28 @@
                     <label style="font-size: 11px; display: block; margin-bottom: 3px; color: #343a40;">Dirección</label>
                     <input type="text" id="direccion" name="direccion" placeholder="Dirección" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
                 </div>
+                <div style="margin-top: 8px;">
+                    <label style="font-size: 11px; display: block; margin-bottom: 3px; color: #343a40;">Sexo</label>
+                    <select id="sexo" name="sexo" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                        <option value="">Seleccionar</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                </div>
             </div>
-            
+
             <!-- Datos de Inscripción -->
             <h3 style="color: #1a2a4f; margin-bottom: 10px; font-size: 13px; font-weight: 600;">
                 <i class="fas fa-pen-alt"></i> Datos de Inscripción
             </h3>
-            
+
             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                 <div style="flex: 1;">
                     <label style="font-size: 11px; display: block; margin-bottom: 3px; color: #343a40;">Programa *</label>
                     <select id="id_programa" name="id_programa" required style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
                         <option value="">Seleccionar</option>
                         @foreach($programas as $programa)
-                            <option value="{{ $programa->id_programa }}">{{ $programa->nombre }}</option>
+                        <option value="{{ $programa->id_programa }}">{{ $programa->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -132,17 +140,17 @@
                     </select>
                 </div>
             </div>
-            
+
             <div id="escuelaGroup" style="margin-bottom: 10px;">
                 <label style="font-size: 11px; display: block; margin-bottom: 3px; color: #343a40;">Escuela</label>
                 <select id="id_escuela" name="id_escuela" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
                     <option value="">Seleccionar escuela</option>
                     @foreach($escuelas as $escuela)
-                        <option value="{{ $escuela->id_escuela }}">{{ $escuela->nombre_escuela }}</option>
+                    <option value="{{ $escuela->id_escuela }}">{{ $escuela->nombre_escuela }}</option>
                     @endforeach
                 </select>
             </div>
-            
+
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <div style="flex: 1;">
                     <label style="font-size: 11px; display: block; margin-bottom: 3px; color: #343a40;">Fecha</label>
@@ -157,7 +165,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" id="cancelarModal" style="background: #6c7a8a; color: white; padding: 6px 15px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">Cancelar</button>
                 <button type="button" id="btnGuardarInscripcion" style="background: #1a2a4f; color: white; padding: 6px 15px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">Guardar</button>
@@ -181,27 +189,6 @@
     </div>
 </div>
 
-<script>
-    // Mostrar/ocultar campo escuela según tipo de inscripción
-    const tipoSelect = document.getElementById('tipo_inscripcion');
-    const escuelaGroup = document.getElementById('escuelaGroup');
-    
-    function toggleEscuelaField() {
-        if (tipoSelect.value === 'escolar') {
-            escuelaGroup.style.display = 'block';
-            document.getElementById('id_escuela').required = true;
-        } else {
-            escuelaGroup.style.display = 'none';
-            document.getElementById('id_escuela').required = false;
-            document.getElementById('id_escuela').value = '';
-        }
-    }
-    
-    if (tipoSelect) {
-        tipoSelect.addEventListener('change', toggleEscuelaField);
-        toggleEscuelaField();
-    }
-</script>
 @endsection
 
 @section('scripts')

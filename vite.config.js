@@ -9,6 +9,8 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/css/login.css',
                 'resources/css/dashboard.css',
+                'resources/css/dashboard-custom.css',
+                'resources/js/dashboard-charts.js',
                 'resources/css/dark-mode.css',
                 'resources/js/dashboard.js',
                 'resources/js/app.js',

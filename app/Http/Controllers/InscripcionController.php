@@ -10,16 +10,15 @@ use Illuminate\Http\Request;
 
 class InscripcionController extends Controller
 {
-   public function index()
-{
-    $inscripciones = Inscripcion::with(['participante', 'programa', 'escuela'])->get();
-    $participantes = Participante::all();
-    // SOLO PROGRAMAS ACTIVOS
-    $programas = Programa::where('estado', 'activo')->get();
-    $escuelas = Escuela::all();
-    
-    return view('inscripciones.index', compact('inscripciones', 'participantes', 'programas', 'escuelas'));
-}
+    public function index()
+    {
+        $inscripciones = Inscripcion::with(['participante', 'programa', 'escuela'])->get();
+        $participantes = Participante::all();
+        $programas = Programa::where('estado', 'activo')->get();
+        $escuelas = Escuela::all();
+
+        return view('inscripciones.index', compact('inscripciones', 'participantes', 'programas', 'escuelas'));
+    }
 
     public function store(Request $request)
     {
@@ -30,6 +29,7 @@ class InscripcionController extends Controller
             'telefono' => 'nullable|max:20',
             'correo' => 'nullable|email|max:150',
             'direccion' => 'nullable',
+            'sexo' => 'nullable|in:M,F',
             'id_programa' => 'required|exists:programas,id_programa',
             'fecha_inscripcion' => 'nullable|date',
             'estado' => 'required|in:activo,finalizado,cancelado',
@@ -37,17 +37,16 @@ class InscripcionController extends Controller
             'id_escuela' => 'nullable|required_if:tipo_inscripcion,escolar|exists:escuelas_beneficiarias,id_escuela'
         ]);
 
-        // Crear el participante
         $participante = Participante::create([
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
             'edad' => $request->edad,
             'telefono' => $request->telefono,
             'correo' => $request->correo,
-            'direccion' => $request->direccion
+            'direccion' => $request->direccion,
+            'sexo' => $request->sexo
         ]);
 
-        // Crear la inscripción
         $data = [
             'id_participante' => $participante->id_participante,
             'id_programa' => $request->id_programa,
@@ -58,22 +57,20 @@ class InscripcionController extends Controller
         ];
 
         $inscripcion = Inscripcion::create($data);
-        
+
         return response()->json(['success' => true, 'inscripcion' => $inscripcion]);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'id_programa' => 'required|exists:programas,id_programa',
-            'fecha_inscripcion' => 'nullable|date',
-            'estado' => 'required|in:activo,finalizado,cancelado',
-            'tipo_inscripcion' => 'required|in:escolar,sabatino,externo',
-            'id_escuela' => 'nullable|required_if:tipo_inscripcion,escolar|exists:escuelas_beneficiarias,id_escuela'
+            'estado' => 'required|in:activo,finalizado,cancelado'
         ]);
 
         $inscripcion = Inscripcion::findOrFail($id);
-        $inscripcion->update($request->all());
+        $inscripcion->estado = $request->estado;
+        $inscripcion->save();
+
         return response()->json(['success' => true, 'inscripcion' => $inscripcion]);
     }
 

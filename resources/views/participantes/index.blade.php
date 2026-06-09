@@ -26,13 +26,13 @@
                 <select id="filtroPrograma" class="filtro-select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     <option value="">Todos los programas</option>
                     @foreach($programas as $programa)
-                        <option value="{{ $programa->id_programa }}" {{ request('programa_id') == $programa->id_programa ? 'selected' : '' }}>
-                            {{ $programa->nombre }}
-                        </option>
+                    <option value="{{ $programa->id_programa }}" {{ request('programa_id') == $programa->id_programa ? 'selected' : '' }}>
+                        {{ $programa->nombre }}
+                    </option>
                     @endforeach
                 </select>
             </div>
-            
+
             <!-- Filtro por Tipo -->
             <div style="flex: 1; min-width: 130px;">
                 <label style="display: block; font-size: 12px; color: #6c7a8a; margin-bottom: 5px;">Tipo</label>
@@ -43,20 +43,30 @@
                     <option value="externo" {{ request('tipo_inscripcion') == 'externo' ? 'selected' : '' }}>Externo</option>
                 </select>
             </div>
-            
+
             <!-- Filtro por Escuela -->
             <div style="flex: 1; min-width: 150px;">
                 <label style="display: block; font-size: 12px; color: #6c7a8a; margin-bottom: 5px;">Escuela</label>
                 <select id="filtroEscuela" class="filtro-select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
                     <option value="">Todas las escuelas</option>
                     @foreach($escuelas as $escuela)
-                        <option value="{{ $escuela->id_escuela }}" {{ request('escuela_id') == $escuela->id_escuela ? 'selected' : '' }}>
-                            {{ $escuela->nombre_escuela }}
-                        </option>
+                    <option value="{{ $escuela->id_escuela }}" {{ request('escuela_id') == $escuela->id_escuela ? 'selected' : '' }}>
+                        {{ $escuela->nombre_escuela }}
+                    </option>
                     @endforeach
                 </select>
             </div>
-            
+
+            <!-- Filtro por Sexo -->
+            <div style="flex: 1; min-width: 120px;">
+                <label style="display: block; font-size: 12px; color: #6c7a8a; margin-bottom: 5px;">Sexo</label>
+                <select id="filtroSexo" class="filtro-select" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                    <option value="">Todos</option>
+                    <option value="M" {{ request('sexo') == 'M' ? 'selected' : '' }}>Masculino</option>
+                    <option value="F" {{ request('sexo') == 'F' ? 'selected' : '' }}>Femenino</option>
+                </select>
+            </div>
+
             <!-- Ordenar por -->
             <div style="flex: 1; min-width: 150px;">
                 <label style="display: block; font-size: 12px; color: #6c7a8a; margin-bottom: 5px;">Ordenar por</label>
@@ -69,7 +79,7 @@
                     <option value="apellido_desc" {{ request('orden') == 'apellido_desc' ? 'selected' : '' }}>Apellido (Z-A)</option>
                 </select>
             </div>
-            
+
             <!-- Botón aplicar filtros -->
             <div>
                 <button id="btnAplicarFiltros" style="background: #1a2a4f; color: white; padding: 8px 20px; border: none; border-radius: 6px; cursor: pointer;">
@@ -92,6 +102,7 @@
                     <th>Edad</th>
                     <th>Teléfono</th>
                     <th>Correo</th>
+                    <th>Sexo</th>
                     <th style="text-align: center">Acciones</th>
                 </tr>
             </thead>
@@ -104,6 +115,15 @@
                     <td>{{ $participante->edad ?? '-' }}</td>
                     <td>{{ $participante->telefono ?? '-' }}</td>
                     <td>{{ $participante->correo ?? '-' }}</td>
+                    <td>
+                        @if($participante->sexo == 'M')
+                        <span style="color: #17a2b8;"><i class="fas fa-mars"></i> Masculino</span>
+                        @elseif($participante->sexo == 'F')
+                        <span style="color: #e83e8c;"><i class="fas fa-venus"></i> Femenino</span>
+                        @else
+                        -
+                        @endif
+                    </td>
                     <td style="text-align: center">
                         <button class="btn-accion btn-ver" data-id="{{ $participante->id_participante }}" title="Ver inscripciones" style="color: #17a2b8;">
                             <i class="fas fa-eye"></i>
@@ -121,7 +141,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="text-align: center; padding: 40px;">
+                    <td colspan="8" style="text-align: center; padding: 40px;">
                         <i class="fas fa-users" style="font-size: 48px; color: #6c7a8a; margin-bottom: 10px; display: block;"></i>
                         No hay participantes registrados
                     </td>
@@ -130,19 +150,20 @@
             </tbody>
         </table>
     </div>
-    
+
     <div class="pagination">
         {{ $participantes->appends([
             'search' => request('search'),
             'programa_id' => request('programa_id'),
             'tipo_inscripcion' => request('tipo_inscripcion'),
             'escuela_id' => request('escuela_id'),
+            'sexo' => request('sexo'),
             'orden' => request('orden')
         ])->links() }}
     </div>
 </div>
 
-<!-- MODALES (igual que antes, se mantienen) -->
+<!-- MODALES -->
 <!-- Modal Ver Inscripciones -->
 <div id="modalVerInscripciones" class="modal-overlay">
     <div class="modal-container" style="width: 750px; max-width: 90%;">
@@ -196,6 +217,14 @@
                 <label>Dirección</label>
                 <input type="text" id="direccion" name="direccion">
             </div>
+            <div class="form-group">
+                <label>Sexo</label>
+                <select id="sexo" name="sexo" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+                    <option value="">Seleccionar</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+            </div>
             <div class="modal-buttons">
                 <button type="button" id="cancelarModal" class="btn-cancelar">Cancelar</button>
                 <button type="button" id="btnGuardarParticipante" class="btn-guardar">Guardar Cambios</button>
@@ -219,7 +248,7 @@
                 <select id="nueva_insc_programa" name="id_programa" required>
                     <option value="">Seleccionar programa</option>
                     @foreach($programas as $programa)
-                        <option value="{{ $programa->id_programa }}">{{ $programa->nombre }}</option>
+                    <option value="{{ $programa->id_programa }}">{{ $programa->nombre }}</option>
                     @endforeach
                 </select>
             </div>
@@ -236,7 +265,7 @@
                 <select id="nueva_insc_escuela" name="id_escuela">
                     <option value="">Seleccionar escuela</option>
                     @foreach($escuelas as $escuela)
-                        <option value="{{ $escuela->id_escuela }}">{{ $escuela->nombre_escuela }}</option>
+                    <option value="{{ $escuela->id_escuela }}">{{ $escuela->nombre_escuela }}</option>
                     @endforeach
                 </select>
             </div>
@@ -262,77 +291,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    const nuevaTipoSelect = document.getElementById('nueva_insc_tipo');
-    const nuevaEscuelaGroup = document.getElementById('nueva_escuela_group');
-    
-    function toggleNuevaEscuelaField() {
-        if (nuevaTipoSelect && nuevaTipoSelect.value === 'escolar') {
-            nuevaEscuelaGroup.style.display = 'block';
-            document.getElementById('nueva_insc_escuela').required = true;
-        } else if (nuevaEscuelaGroup) {
-            nuevaEscuelaGroup.style.display = 'none';
-            if (document.getElementById('nueva_insc_escuela')) {
-                document.getElementById('nueva_insc_escuela').required = false;
-            }
-        }
-    }
-    
-    if (nuevaTipoSelect) {
-        nuevaTipoSelect.addEventListener('change', toggleNuevaEscuelaField);
-        toggleNuevaEscuelaField();
-    }
-    
-    // Filtros
-    const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
-    const btnLimpiarFiltros = document.getElementById('btnLimpiarFiltros');
-    const filtroPrograma = document.getElementById('filtroPrograma');
-    const filtroTipo = document.getElementById('filtroTipo');
-    const filtroEscuela = document.getElementById('filtroEscuela');
-    const filtroOrden = document.getElementById('filtroOrden');
-    const searchInputFiltro = document.getElementById('searchInput');
-    const btnBuscarFiltro = document.getElementById('btnBuscar');
-    const btnLimpiarFiltro = document.getElementById('btnLimpiar');
-    
-    function aplicarFiltros() {
-        let url = '/participantes?';
-        const params = [];
-        
-        if (searchInputFiltro && searchInputFiltro.value) {
-            params.push(`search=${encodeURIComponent(searchInputFiltro.value)}`);
-        }
-        if (filtroPrograma && filtroPrograma.value) {
-            params.push(`programa_id=${filtroPrograma.value}`);
-        }
-        if (filtroTipo && filtroTipo.value) {
-            params.push(`tipo_inscripcion=${filtroTipo.value}`);
-        }
-        if (filtroEscuela && filtroEscuela.value) {
-            params.push(`escuela_id=${filtroEscuela.value}`);
-        }
-        if (filtroOrden && filtroOrden.value) {
-            params.push(`orden=${filtroOrden.value}`);
-        }
-        
-        window.location.href = url + params.join('&');
-    }
-    
-    function limpiarFiltros() {
-        window.location.href = '/participantes';
-    }
-    
-    if (btnAplicarFiltros) btnAplicarFiltros.addEventListener('click', aplicarFiltros);
-    if (btnLimpiarFiltros) btnLimpiarFiltros.addEventListener('click', limpiarFiltros);
-    if (btnBuscarFiltro) btnBuscarFiltro.addEventListener('click', aplicarFiltros);
-    if (btnLimpiarFiltro) btnLimpiarFiltro.addEventListener('click', limpiarFiltros);
-    
-    if (searchInputFiltro) {
-        searchInputFiltro.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') aplicarFiltros();
-        });
-    }
-</script>
 @endsection
 
 @section('scripts')

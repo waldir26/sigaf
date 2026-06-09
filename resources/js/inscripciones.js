@@ -10,6 +10,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmarEliminar = document.getElementById('confirmarEliminar');
     let eliminarId = null;
 
+    // Mostrar/ocultar campo escuela según tipo de inscripción
+    const tipoSelect = document.getElementById('tipo_inscripcion');
+    const escuelaGroup = document.getElementById('escuelaGroup');
+    
+    function toggleEscuelaField() {
+        if (tipoSelect && tipoSelect.value === 'escolar') {
+            escuelaGroup.style.display = 'block';
+            document.getElementById('id_escuela').required = true;
+        } else if (escuelaGroup) {
+            escuelaGroup.style.display = 'none';
+            document.getElementById('id_escuela').required = false;
+            document.getElementById('id_escuela').value = '';
+        }
+    }
+
     function abrirModal(titulo, data = null) {
         const modalTitulo = document.getElementById('modalTitulo');
         const participanteSection = document.getElementById('participanteSection');
@@ -31,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('telefono').value = '';
             document.getElementById('correo').value = '';
             document.getElementById('direccion').value = '';
+            document.getElementById('sexo').value = '';
             // Trigger para mostrar/ocultar escuela
             const event = new Event('change');
             document.getElementById('tipo_inscripcion').dispatchEvent(event);
@@ -72,6 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelarEliminar.addEventListener('click', cerrarModales);
     }
 
+    if (tipoSelect) {
+        tipoSelect.addEventListener('change', toggleEscuelaField);
+        toggleEscuelaField();
+    }
+
     if (btnGuardar) {
         btnGuardar.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -102,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     telefono: document.getElementById('telefono').value,
                     correo: document.getElementById('correo').value,
                     direccion: document.getElementById('direccion').value,
+                    sexo: document.getElementById('sexo').value,
                     id_programa: document.getElementById('id_programa').value,
                     tipo_inscripcion: document.getElementById('tipo_inscripcion').value,
                     id_escuela: document.getElementById('id_escuela').value,

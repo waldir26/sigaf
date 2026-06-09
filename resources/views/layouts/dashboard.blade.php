@@ -36,13 +36,13 @@
                     <i class="fas fa-school"></i>
                     <span>Escuelas Beneficiarias</span>
                 </a>
-                <a href="{{ route('participantes.index') }}" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Participantes</span>
-                </a>
                 <a href="{{ route('inscripciones.index') }}" class="menu-item">
                     <i class="fas fa-pen-alt"></i>
                     <span>Inscripciones</span>
+                </a>
+                <a href="{{ route('participantes.index') }}" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Participantes</span>
                 </a>
                 <a href="{{ route('inventario.index') }}" class="menu-item">
                     <i class="fas fa-boxes"></i>

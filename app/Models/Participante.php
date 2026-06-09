@@ -16,6 +16,7 @@ class Participante extends Model
         'edad',
         'telefono',
         'correo',
-        'direccion'
+        'direccion',
+        'sexo'
     ];
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gasto;
+use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
 use Spatie\LaravelPdf\Facades\Pdf;
 
@@ -12,19 +13,16 @@ class GastoController extends Controller
     {
         $query = Gasto::query();
 
-        // Buscador general
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('descripcion', 'LIKE', "%{$search}%")
                 ->orWhere('categoria', 'LIKE', "%{$search}%");
         }
 
-        // Filtro por categoría
         if ($request->has('categoria') && $request->categoria != '') {
             $query->where('categoria', $request->categoria);
         }
 
-        // Filtros de fecha
         if ($request->has('fecha_desde') && $request->fecha_desde != '') {
             $query->whereDate('fecha', '>=', $request->fecha_desde);
         }
@@ -32,7 +30,6 @@ class GastoController extends Controller
             $query->whereDate('fecha', '<=', $request->fecha_hasta);
         }
 
-        // Ordenamiento
         $orden = $request->get('orden', 'fecha_desc');
         switch ($orden) {
             case 'fecha_asc':
@@ -51,8 +48,6 @@ class GastoController extends Controller
 
         $gastos = $query->paginate(15);
         $totalGastos = Gasto::sum('monto');
-
-        // Categorías únicas existentes para el filtro
         $categorias = Gasto::select('categoria')->distinct()->pluck('categoria');
 
         return view('gastos.index', compact('gastos', 'totalGastos', 'categorias'));
@@ -60,34 +55,80 @@ class GastoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'categoria' => 'required|max:100',
-            'descripcion' => 'nullable',
-            'monto' => 'required|numeric|min:0',
-            'fecha' => 'required|date'
-        ]);
+        try {
+            $validated = $request->validate([
+                'categoria' => 'required|max:100',
+                'descripcion' => 'nullable',
+                'monto' => 'required|numeric|min:0',
+                'fecha' => 'required|date'
+            ]);
 
-        $gasto = Gasto::create($request->all());
-        return response()->json(['success' => true, 'gasto' => $gasto]);
+            $gasto = Gasto::create($validated);
+
+            MovimientoFinanciero::create([
+                'tipo' => 'Gasto',
+                'origen' => $gasto->categoria,
+                'monto' => $gasto->monto,
+                'fecha' => $gasto->fecha,
+                'descripcion' => $gasto->descripcion ?? 'Gasto de ' . $gasto->categoria,
+                'tabla_referencia' => 'gastos',
+                'id_referencia' => $gasto->id_gasto
+            ]);
+
+            return response()->json(['success' => true, 'gasto' => $gasto]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Complete todos los campos correctamente'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'categoria' => 'required|max:100',
-            'descripcion' => 'nullable',
-            'monto' => 'required|numeric|min:0',
-            'fecha' => 'required|date'
-        ]);
+        try {
+            $validated = $request->validate([
+                'categoria' => 'required|max:100',
+                'descripcion' => 'nullable',
+                'monto' => 'required|numeric|min:0',
+                'fecha' => 'required|date'
+            ]);
 
-        $gasto = Gasto::findOrFail($id);
-        $gasto->update($request->all());
-        return response()->json(['success' => true, 'gasto' => $gasto]);
+            $gasto = Gasto::findOrFail($id);
+            $gasto->update($validated);
+
+            $movimiento = MovimientoFinanciero::where('tabla_referencia', 'gastos')
+                ->where('id_referencia', $gasto->id_gasto)
+                ->first();
+
+            if ($movimiento) {
+                $movimiento->update([
+                    'origen' => $gasto->categoria,
+                    'monto' => $gasto->monto,
+                    'fecha' => $gasto->fecha,
+                    'descripcion' => $gasto->descripcion ?? 'Gasto de ' . $gasto->categoria
+                ]);
+            }
+
+            return response()->json(['success' => true, 'gasto' => $gasto]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al actualizar'], 500);
+        }
     }
 
     public function destroy($id)
     {
         $gasto = Gasto::findOrFail($id);
+
+        MovimientoFinanciero::where('tabla_referencia', 'gastos')
+            ->where('id_referencia', $gasto->id_gasto)
+            ->delete();
+
         $gasto->delete();
         return response()->json(['success' => true]);
     }
@@ -101,7 +142,6 @@ class GastoController extends Controller
     public function exportPdf($id)
     {
         $gasto = Gasto::findOrFail($id);
-
         return Pdf::view('gastos.pdf', compact('gasto'))
             ->format('a4')
             ->name('comprobante_gasto_' . $gasto->id_gasto . '.pdf');

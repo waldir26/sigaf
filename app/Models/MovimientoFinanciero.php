@@ -11,6 +11,12 @@ class MovimientoFinanciero extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'tipo', 'origen', 'monto', 'fecha', 'descripcion', 'tabla_referencia', 'id_referencia'
+        'tipo',
+        'origen',
+        'monto',
+        'fecha',
+        'descripcion',
+        'tabla_referencia',
+        'id_referencia'
     ];
 }

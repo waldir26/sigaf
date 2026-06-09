@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('modalParticipante');
     const modalVer = document.getElementById('modalVerInscripciones');
     const modalNueva = document.getElementById('modalNuevaInscripcion');
@@ -15,41 +15,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelarNuevaModal = document.getElementById('cancelarNuevaModal');
     const cancelarEliminar = document.getElementById('cancelarEliminar');
     const confirmarEliminar = document.getElementById('confirmarEliminar');
-    const btnBuscar = document.getElementById('btnBuscar');
-    const btnLimpiar = document.getElementById('btnLimpiar');
-    const searchInput = document.getElementById('searchInput');
     let eliminarId = null;
     let currentParticipanteId = null;
     let cambiosEstado = {};
 
-    if (btnBuscar) {
-        btnBuscar.addEventListener('click', () => {
-            const search = searchInput.value;
-            window.location.href = `/participantes?search=${encodeURIComponent(search)}`;
-        });
+    // ========== FILTROS ==========
+    const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
+    const btnLimpiarFiltros = document.getElementById('btnLimpiarFiltros');
+    const filtroPrograma = document.getElementById('filtroPrograma');
+    const filtroTipo = document.getElementById('filtroTipo');
+    const filtroEscuela = document.getElementById('filtroEscuela');
+    const filtroSexo = document.getElementById('filtroSexo');
+    const filtroOrden = document.getElementById('filtroOrden');
+    const searchInput = document.getElementById('searchInput');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const btnLimpiar = document.getElementById('btnLimpiar');
+
+    function aplicarFiltros() {
+        let url = '/participantes?';
+        const params = [];
+        if (searchInput && searchInput.value) params.push(`search=${encodeURIComponent(searchInput.value)}`);
+        if (filtroPrograma && filtroPrograma.value) params.push(`programa_id=${filtroPrograma.value}`);
+        if (filtroTipo && filtroTipo.value) params.push(`tipo_inscripcion=${filtroTipo.value}`);
+        if (filtroEscuela && filtroEscuela.value) params.push(`escuela_id=${filtroEscuela.value}`);
+        if (filtroSexo && filtroSexo.value) params.push(`sexo=${filtroSexo.value}`);
+        if (filtroOrden && filtroOrden.value) params.push(`orden=${filtroOrden.value}`);
+        window.location.href = url + params.join('&');
     }
-    
-    if (btnLimpiar) {
-        btnLimpiar.addEventListener('click', () => {
-            window.location.href = '/participantes';
-        });
+
+    function limpiarFiltros() {
+        window.location.href = '/participantes';
     }
-    
+
+    if (btnAplicarFiltros) btnAplicarFiltros.addEventListener('click', aplicarFiltros);
+    if (btnLimpiarFiltros) btnLimpiarFiltros.addEventListener('click', limpiarFiltros);
+    if (btnBuscar) btnBuscar.addEventListener('click', aplicarFiltros);
+    if (btnLimpiar) btnLimpiar.addEventListener('click', limpiarFiltros);
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const search = searchInput.value;
-                window.location.href = `/participantes?search=${encodeURIComponent(search)}`;
-            }
+            if (e.key === 'Enter') aplicarFiltros();
         });
     }
 
-    // Cargar inscripciones para el modal VER (con cambio de estado)
+    // ========== FUNCIONES DE INSCRIPCIONES ==========
     async function cargarInscripcionesVer(participanteId) {
         const response = await fetch(`/participantes/${participanteId}`);
         const data = await response.json();
         cambiosEstado = {};
-        
+
         let html = '';
         if (data.inscripciones.length === 0) {
             html = '<p style="text-align: center; padding: 20px; color: #6c7a8a;">No está inscrito en ningún programa</p>';
@@ -62,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             html += '<th style="padding: 10px; text-align: left;">Fecha</th>';
             html += '<th style="padding: 10px; text-align: left;">Estado</th>';
             html += '</thead><tbody>';
-            
+
             data.inscripciones.forEach(ins => {
                 html += `<tr style="border-bottom: 1px solid #eee;" data-programa="${ins.programa?.nombre || 'N/A'}" data-tipo="${ins.tipo_inscripcion}">
                     <td style="padding: 10px;">${ins.programa?.nombre || 'N/A'}</td>
@@ -81,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             html += '</tbody></table>';
         }
         document.getElementById('inscripcionesList').innerHTML = html;
-        
+
         document.querySelectorAll('.estado-select').forEach(select => {
             select.addEventListener('change', (e) => {
                 const id = e.target.dataset.id;
@@ -96,36 +109,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Guardar cambios de estado
     async function guardarCambiosEstado() {
         const ids = Object.keys(cambiosEstado);
         if (ids.length === 0) {
             showNotification('No hay cambios para guardar', 'info');
             return;
         }
-        
+
         let successCount = 0;
         let errorCount = 0;
-        
+
         for (const id of ids) {
             const nuevoEstado = cambiosEstado[id];
-            const select = document.querySelector(`.estado-select[data-id="${id}"]`);
-            const row = select.closest('tr');
-            const programaNombre = row.cells[0].innerText;
-            const tipoInscripcion = row.cells[1].innerText.trim().toLowerCase();
-            
-            // Obtener el ID del programa por su nombre
-            let programaId = 1;
-            const programaSelect = document.getElementById('nueva_insc_programa');
-            if (programaSelect) {
-                for (let i = 0; i < programaSelect.options.length; i++) {
-                    if (programaSelect.options[i].text === programaNombre) {
-                        programaId = programaSelect.options[i].value;
-                        break;
-                    }
-                }
-            }
-            
+
             try {
                 const response = await fetch(`/inscripciones/${id}`, {
                     method: 'PUT',
@@ -134,27 +130,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
-                        id_programa: programaId,
-                        tipo_inscripcion: tipoInscripcion,
-                        id_escuela: null,
-                        fecha_inscripcion: new Date().toISOString().split('T')[0],
                         estado: nuevoEstado
                     })
                 });
                 const result = await response.json();
                 if (result.success) {
                     successCount++;
-                    select.dataset.estadoOriginal = nuevoEstado;
+                    const select = document.querySelector(`.estado-select[data-id="${id}"]`);
+                    if (select) select.dataset.estadoOriginal = nuevoEstado;
                 } else {
                     errorCount++;
-                    console.error('Error:', result);
                 }
             } catch (error) {
                 errorCount++;
-                console.error('Error:', error);
             }
         }
-        
+
         if (errorCount === 0 && successCount > 0) {
             showNotification(`${successCount} estado(s) actualizado(s) con éxito`, 'success');
             await cargarInscripcionesVer(currentParticipanteId);
@@ -166,19 +157,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Abrir modal VER inscripciones
+    // ========== MODALES ==========
     async function abrirModalVer(id) {
         currentParticipanteId = id;
         await cargarInscripcionesVer(id);
         modalVer.style.display = 'flex';
     }
 
-    // Abrir modal EDITAR (solo datos personales)
     async function abrirModalEditar(id) {
         const response = await fetch(`/participantes/${id}`);
         const data = await response.json();
         const participante = data.participante;
-        
+
         document.getElementById('participante_id').value = participante.id_participante;
         document.getElementById('nombres').value = participante.nombres;
         document.getElementById('apellidos').value = participante.apellidos;
@@ -186,11 +176,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('telefono').value = participante.telefono || '';
         document.getElementById('correo').value = participante.correo || '';
         document.getElementById('direccion').value = participante.direccion || '';
-        
+        document.getElementById('sexo').value = participante.sexo || '';
+
         modal.style.display = 'flex';
     }
 
-    // Abrir modal NUEVA inscripción
     function abrirModalNuevaInscripcion(id) {
         currentParticipanteId = id;
         document.getElementById('nueva_insc_participante_id').value = id;
@@ -208,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalEliminar.style.display = 'none';
     }
 
-    // Eventos de botones
+    // ========== EVENTOS DE BOTONES ==========
     document.querySelectorAll('.btn-ver').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.dataset.id;
@@ -244,16 +234,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelarModal) cancelarModal.addEventListener('click', cerrarModales);
     if (cancelarNuevaModal) cancelarNuevaModal.addEventListener('click', cerrarModales);
     if (cancelarEliminar) cancelarEliminar.addEventListener('click', cerrarModales);
-    
+
     if (btnGuardarCambiosEstado) {
         btnGuardarCambiosEstado.addEventListener('click', guardarCambiosEstado);
     }
 
-    // Guardar edición de datos personales
+    // ========== GUARDAR EDICIÓN DE PARTICIPANTE ==========
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function() {
+        btnGuardar.addEventListener('click', async function () {
             const id = document.getElementById('participante_id').value;
-            
+
             const data = {
                 nombres: document.getElementById('nombres').value,
                 apellidos: document.getElementById('apellidos').value,
@@ -261,13 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 telefono: document.getElementById('telefono').value,
                 correo: document.getElementById('correo').value,
                 direccion: document.getElementById('direccion').value,
+                sexo: document.getElementById('sexo').value,
                 _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
+
             try {
                 const response = await fetch(`/participantes/${id}`, {
                     method: 'PUT',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -286,9 +277,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Guardar nueva inscripción
+    // ========== GUARDAR NUEVA INSCRIPCIÓN ==========
     if (btnGuardarNueva) {
-        btnGuardarNueva.addEventListener('click', async function() {
+        btnGuardarNueva.addEventListener('click', async function () {
             const data = {
                 id_participante: document.getElementById('nueva_insc_participante_id').value,
                 id_programa: document.getElementById('nueva_insc_programa').value,
@@ -296,11 +287,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 id_escuela: document.getElementById('nueva_insc_escuela').value,
                 _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
+
             try {
                 const response = await fetch('/participantes/inscripcion', {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -320,12 +311,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Eliminar participante
+    // ========== ELIMINAR PARTICIPANTE ==========
     if (confirmarEliminar) {
         confirmarEliminar.addEventListener('click', async () => {
             const response = await fetch(`/participantes/${eliminarId}`, {
                 method: 'DELETE',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
