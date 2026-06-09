@@ -9,6 +9,8 @@ use App\Http\Controllers\ParticipanteController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\DonacionController;
+use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\VentaController;
 
 
 // Redirigir raíz al login
@@ -45,7 +47,7 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/participantes/{id}', [ParticipanteController::class, 'show'])->name('participantes.show');
     Route::put('/participantes/{id}', [ParticipanteController::class, 'update'])->name('participantes.update');
     Route::delete('/participantes/{id}', [ParticipanteController::class, 'destroy'])->name('participantes.destroy');
-    
+
     // ========== NUEVA INSCRIPCIÓN DESDE PARTICIPANTE ==========
     Route::post('/participantes/inscripcion', [ParticipanteController::class, 'addInscripcion'])->name('participantes.addInscripcion');
 
@@ -77,5 +79,22 @@ Route::middleware('auth.custom')->group(function () {
 
     //subir douemnto escanedo y sellado
     Route::post('/donaciones/{id}/subir-sellado', [DonacionController::class, 'subirDocumentoSellado'])->name('donaciones.subirSellado');
-});
 
+    // ========== SERVICIOS Y ACTIVIDADES ==========
+    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios.index');
+    Route::post('/servicios', [ServicioController::class, 'store'])->name('servicios.store');
+    Route::get('/servicios/{id}', [ServicioController::class, 'show'])->name('servicios.show');
+    Route::put('/servicios/{id}', [ServicioController::class, 'update'])->name('servicios.update');
+    Route::delete('/servicios/{id}', [ServicioController::class, 'destroy'])->name('servicios.destroy');
+    Route::get('/servicios/{id}/pdf', [ServicioController::class, 'exportPdf'])->name('servicios.pdf');
+    Route::get('/servicios/exportar/reporte', [ServicioController::class, 'exportReporte'])->name('servicios.reporte');
+
+    // ========== VENTAS DE BIENES ==========
+    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
+    Route::post('/ventas', [VentaController::class, 'store'])->name('ventas.store');
+    Route::get('/ventas/{id}', [VentaController::class, 'show'])->name('ventas.show');
+    Route::put('/ventas/{id}', [VentaController::class, 'update'])->name('ventas.update');
+    Route::delete('/ventas/{id}', [VentaController::class, 'destroy'])->name('ventas.destroy');
+    Route::get('/ventas/{id}/pdf', [VentaController::class, 'exportPdf'])->name('ventas.pdf');
+    Route::get('/ventas/exportar/reporte', [VentaController::class, 'exportReporte'])->name('ventas.reporte');
+});

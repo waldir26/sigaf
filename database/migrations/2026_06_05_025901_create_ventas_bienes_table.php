@@ -11,7 +11,7 @@ return new class extends Migration
         if (!Schema::hasTable('ventas_bienes')) {
             Schema::create('ventas_bienes', function (Blueprint $table) {
                 $table->id('id_venta');
-                $table->string('bien', 200);
+                $table->string('articulo', 200);
                 $table->decimal('monto', 12, 2);
                 $table->date('fecha')->nullable();
                 $table->string('comprobante', 255)->nullable();

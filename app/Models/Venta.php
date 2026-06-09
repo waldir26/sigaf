@@ -11,6 +11,8 @@ class Venta extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'bien', 'monto', 'fecha', 'comprobante'
+        'articulo',
+        'monto',
+        'fecha'
     ];
 }

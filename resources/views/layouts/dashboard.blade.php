@@ -45,15 +45,11 @@
                     <i class="fas fa-hand-holding-heart"></i>
                     <span>Donaciones</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-gift"></i>
-                    <span>Donaciones</span>
-                </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('servicios.index') }}" class="menu-item">
                     <i class="fas fa-concierge-bell"></i>
                     <span>Servicios y Actividades</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('ventas.index') }}" class="menu-item">
                     <i class="fas fa-tags"></i>
                     <span>Ventas de Bienes</span>
                 </a>

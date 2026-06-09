@@ -11,6 +11,10 @@ class Servicio extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'tipo_servicio', 'descripcion', 'responsable', 'fecha', 'monto', 'comprobante'
+        'tipo_servicio',
+        'descripcion',
+        'responsable',
+        'fecha',
+        'monto'
     ];
 }

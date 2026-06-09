@@ -23,7 +23,11 @@ export default defineConfig({
                 'resources/css/inventario.css',
                 'resources/js/inventario.js',
                 'resources/css/donaciones.css',
-                'resources/js/donaciones.js'
+                'resources/js/donaciones.js',
+                'resources/css/servicios.css',
+                'resources/js/servicios.js',
+                'resources/css/ventas.css',
+                'resources/js/ventas.js'
             ],
             refresh: true,
         }),

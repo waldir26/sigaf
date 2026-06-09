@@ -72,7 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filtroDonante && filtroDonante.value) params.push(`donante_id=${filtroDonante.value}`);
         if (filtroFechaDesde && filtroFechaDesde.value) params.push(`fecha_desde=${filtroFechaDesde.value}`);
         if (filtroFechaHasta && filtroFechaHasta.value) params.push(`fecha_hasta=${filtroFechaHasta.value}`);
-        window.location.href = url + params.join('&');
+        
+        // Abrir en nueva pestaña
+        window.open(url + params.join('&'), '_blank');
     }
     
     if (btnAplicarFiltros) btnAplicarFiltros.addEventListener('click', aplicarFiltros);
