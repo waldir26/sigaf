@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +10,24 @@
     @vite(['resources/css/app.css', 'resources/css/dashboard.css', 'resources/css/dark-mode.css'])
     @yield('styles')
 </head>
+
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
             <div class="sidebar-logo">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </div>
-            
+
             <nav class="sidebar-menu">
+                <!-- INICIO -->
                 <a href="{{ route('dashboard') }}" class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
+
+                <div class="menu-divider"></div>
+                <div class="menu-section-title">Gestión</div>
+
                 <a href="{{ route('programas.index') }}" class="menu-item">
                     <i class="fas fa-chalkboard"></i>
                     <span>Programas</span>
@@ -29,18 +36,22 @@
                     <i class="fas fa-school"></i>
                     <span>Escuelas Beneficiarias</span>
                 </a>
-                <a href="{{ route('inscripciones.index') }}" class="menu-item">
-                    <i class="fas fa-pen-alt"></i>
-                    <span>Inscripciones</span>
-                </a>
                 <a href="{{ route('participantes.index') }}" class="menu-item">
                     <i class="fas fa-users"></i>
                     <span>Participantes</span>
+                </a>
+                <a href="{{ route('inscripciones.index') }}" class="menu-item">
+                    <i class="fas fa-pen-alt"></i>
+                    <span>Inscripciones</span>
                 </a>
                 <a href="{{ route('inventario.index') }}" class="menu-item">
                     <i class="fas fa-boxes"></i>
                     <span>Inventario</span>
                 </a>
+
+                <div class="menu-divider"></div>
+                <div class="menu-section-title">Finanzas</div>
+
                 <a href="{{ route('donaciones.index') }}" class="menu-item">
                     <i class="fas fa-hand-holding-heart"></i>
                     <span>Donaciones</span>
@@ -53,23 +64,14 @@
                     <i class="fas fa-tags"></i>
                     <span>Ventas de Bienes</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ route('gastos.index') }}" class="menu-item">
                     <i class="fas fa-money-bill-wave"></i>
-                    <span>Gestión Financiera </span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Reportes</span>
+                    <span>Gastos</span>
                 </a>
 
-                <a href="#" class="menu-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Transparencia financiera</span>
-                </a>
-                
                 <div class="menu-divider"></div>
-                
                 <div class="menu-section-title">Configuración</div>
+
                 <a href="#" class="menu-item">
                     <i class="fas fa-user-circle"></i>
                     <span>Perfil</span>
@@ -79,7 +81,7 @@
                     <span>Usuarios</span>
                 </a>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -90,7 +92,7 @@
                 </form>
             </div>
         </aside>
-        
+
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="theme-toggle" id="theme-toggle">
@@ -102,53 +104,52 @@
                     <span>{{ session('usuario')->nombre ?? 'Usuario' }}</span>
                 </div>
             </nav>
-            
+
             <div class="content-page">
                 @yield('content')
             </div>
         </main>
     </div>
-    
+
     @vite('resources/js/dashboard.js')
     @yield('scripts')
-    
+
     <script>
         function showNotification(message, type = 'info') {
             const existingToast = document.querySelector('.toast-notification');
             if (existingToast) existingToast.remove();
-            
+
             const toast = document.createElement('div');
             toast.className = `toast-notification ${type}`;
-            
+
             let icon = '';
-            switch(type) {
-                case 'success': 
-                    icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>'; 
+            switch (type) {
+                case 'success':
+                    icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
                     break;
-                case 'error': 
-                    icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>'; 
+                case 'error':
+                    icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
                     break;
-                case 'warning': 
-                    icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>'; 
+                case 'warning':
+                    icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
                     break;
-                default: 
+                default:
                     icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
             }
-            
+
             toast.innerHTML = `
                 ${icon}
                 <span class="toast-content">${message}</span>
             `;
-            
+
             document.body.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
-        
-        // Agregar estilos de animación si no existen
+
         if (!document.querySelector('#toast-styles')) {
             const style = document.createElement('style');
             style.id = 'toast-styles';
@@ -191,4 +192,5 @@
         }
     </script>
 </body>
+
 </html>

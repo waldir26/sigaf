@@ -11,6 +11,9 @@ class Gasto extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'categoria', 'descripcion', 'monto', 'fecha', 'comprobante'
+        'categoria',
+        'descripcion',
+        'monto',
+        'fecha'
     ];
 }

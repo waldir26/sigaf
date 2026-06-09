@@ -11,6 +11,7 @@ use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\DonacionController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\GastoController;
 
 
 // Redirigir raíz al login
@@ -97,4 +98,13 @@ Route::middleware('auth.custom')->group(function () {
     Route::delete('/ventas/{id}', [VentaController::class, 'destroy'])->name('ventas.destroy');
     Route::get('/ventas/{id}/pdf', [VentaController::class, 'exportPdf'])->name('ventas.pdf');
     Route::get('/ventas/exportar/reporte', [VentaController::class, 'exportReporte'])->name('ventas.reporte');
+
+    // ========== GASTOS ==========
+    Route::get('/gastos', [GastoController::class, 'index'])->name('gastos.index');
+    Route::post('/gastos', [GastoController::class, 'store'])->name('gastos.store');
+    Route::get('/gastos/{id}', [GastoController::class, 'show'])->name('gastos.show');
+    Route::put('/gastos/{id}', [GastoController::class, 'update'])->name('gastos.update');
+    Route::delete('/gastos/{id}', [GastoController::class, 'destroy'])->name('gastos.destroy');
+    Route::get('/gastos/{id}/pdf', [GastoController::class, 'exportPdf'])->name('gastos.pdf');
+    Route::get('/gastos/exportar/reporte', [GastoController::class, 'exportReporte'])->name('gastos.reporte');
 });
