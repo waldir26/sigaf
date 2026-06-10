@@ -1,0 +1,374 @@
+.usuarios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.usuarios-header h1 {
+    color: var(--azul-marino);
+}
+
+.usuarios-header h1 i {
+    margin-right: 10px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-box input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 250px;
+    font-size: 13px;
+}
+
+.search-box button {
+    background: var(--azul-marino);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.usuarios-table-container {
+    background: var(--blanco);
+    border-radius: 12px;
+    overflow-x: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.usuarios-table thead {
+    background: var(--azul-marino);
+    color: var(--blanco);
+}
+
+.usuarios-table th {
+    padding: 12px;
+    text-align: left;
+}
+
+.usuarios-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-nuevo {
+    background: var(--azul-marino);
+    color: var(--blanco);
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-nuevo i {
+    margin-right: 8px;
+}
+
+.btn-accion {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 16px;
+}
+
+.btn-editar {
+    color: var(--azul-marino);
+}
+
+.btn-eliminar {
+    color: #dc3545;
+}
+
+.estado-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.estado-activo {
+    background: #d4edda;
+    color: #155724;
+}
+
+.estado-inactivo {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.rol-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.rol-admin {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.rol-empleado {
+    background: #e2d5f5;
+    color: #5e2e8a;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.pagination a,
+.pagination span {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--azul-marino);
+}
+
+.pagination .active span {
+    background: var(--azul-marino);
+    color: white;
+    border-color: var(--azul-marino);
+}
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+    background: var(--blanco);
+    border-radius: 16px;
+    width: 550px;
+    max-width: 90%;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    color: var(--azul-marino);
+    margin: 0;
+    font-size: 20px;
+}
+
+.modal-header h2 i {
+    margin-right: 8px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--gris-medio);
+}
+
+/* Foto de perfil */
+.foto-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.foto-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--azul-marino);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.foto-preview i {
+    font-size: 50px;
+    color: white;
+}
+
+.foto-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.foto-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--azul-marino);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.foto-overlay:hover {
+    background: var(--azul-marino-claro);
+    transform: scale(1.05);
+}
+
+/* Password wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 35px;
+}
+
+.password-wrapper .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--gris-medio);
+    font-size: 14px;
+}
+
+.password-wrapper .toggle-password:hover {
+    color: var(--azul-marino);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--gris-oscuro);
+    font-size: 13px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.btn-cancelar {
+    background: var(--gris-medio);
+    color: var(--blanco);
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-guardar {
+    background: var(--azul-marino);
+    color: var(--blanco);
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-eliminar {
+    text-align: center;
+}
+
+.modal-eliminar i {
+    font-size: 48px;
+    color: #f0ad4e;
+    margin-bottom: 15px;
+}
+
+/* Avatar por defecto según sexo */
+.foto-preview.masculino {
+    background: #17a2b8;
+}
+
+.foto-preview.femenino {
+    background: #e83e8c;
+}
+
+body.dark-mode .usuarios-table-container {
+    background: #1a1a2e;
+}
+
+body.dark-mode .usuarios-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .modal-container {
+    background: #1a1a2e;
+}
+
+body.dark-mode .form-group label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select {
+    background: #2d2d3f;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}

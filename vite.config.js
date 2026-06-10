@@ -33,7 +33,9 @@ export default defineConfig({
                 'resources/css/gastos.css',
                 'resources/js/gastos.js',
                 'resources/css/perfil.css',
-                'resources/js/perfil.js'
+                'resources/js/perfil.js',
+                'resources/css/usuarios.css',
+                'resources/js/usuarios.js'
             ],
             refresh: true,
         }),

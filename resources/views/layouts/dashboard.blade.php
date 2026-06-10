@@ -76,10 +76,12 @@
                     <i class="fas fa-user-circle"></i>
                     <span>Perfil</span>
                 </a>
-                <a href="#" class="menu-item">
+                @if(session('usuario') && session('usuario')->rol == 'admin')
+                <a href="{{ route('usuarios.index') }}" class="menu-item">
                     <i class="fas fa-users-cog"></i>
                     <span>Usuarios</span>
                 </a>
+                @endif
             </nav>
 
             <div class="sidebar-footer">

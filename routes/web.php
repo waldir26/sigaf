@@ -13,6 +13,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\UsuarioController;
 
 // Redirigir raíz al login
 Route::get('/', function () {
@@ -111,4 +112,11 @@ Route::middleware('auth.custom')->group(function () {
     // ========== PERFIL ==========
     Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index')->middleware('auth.custom');
     Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update')->middleware('auth.custom');
+
+    // ========== USUARIOS (solo admin) ==========
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+    Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
+    Route::get('/usuarios/{id}', [UsuarioController::class, 'show'])->name('usuarios.show');
+    Route::put('/usuarios/{id}', [UsuarioController::class, 'update'])->name('usuarios.update');
+    Route::delete('/usuarios/{id}', [UsuarioController::class, 'destroy'])->name('usuarios.destroy');
 });
