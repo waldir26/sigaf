@@ -15,7 +15,9 @@
                 <img src="{{ asset($usuario->foto) }}" class="foto-perfil" id="foto_perfil" alt="Foto">
                 @else
                 <div class="foto-perfil-default" id="foto_perfil_default">
-                    <i class="fas fa-user"></i>
+                    <span style="font-size: 40px; font-weight: bold;">
+                        {{ strtoupper(substr($usuario->nombre, 0, 1)) }}{{ strtoupper(substr($usuario->apellido, 0, 1)) }}
+                    </span>
                 </div>
                 @endif
                 <div class="foto-overlay" id="foto_overlay">
@@ -32,7 +34,7 @@
         </div>
         @endif
 
-        <form method="POST" action="{{ route('perfil.update') }}" enctype="multipart/form-data" id="perfilForm">
+        <form method="POST" action="{{ route('perfil.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -51,11 +53,18 @@
                 </div>
             </div>
 
+            @if(session('usuario')->rol == 'admin')
             <div class="form-group">
                 <label><i class="fas fa-envelope"></i> Correo Electrónico *</label>
                 <input type="email" name="correo" value="{{ old('correo', $usuario->correo) }}" required>
                 @error('correo') <span style="color: red; font-size: 12px;">{{ $message }}</span> @enderror
             </div>
+            @else
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                <input type="text" value="{{ $usuario->correo }}" readonly style="background: #e9ecef; cursor: not-allowed; width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+            @endif
 
             <div class="form-group">
                 <label><i class="fas fa-user-circle"></i> Nombre de Usuario *</label>
@@ -63,6 +72,7 @@
                 @error('usuario') <span style="color: red; font-size: 12px;">{{ $message }}</span> @enderror
             </div>
 
+            @if(session('usuario')->rol == 'admin')
             <div class="form-row">
                 <div class="form-group">
                     <label><i class="fas fa-lock"></i> Nueva Contraseña</label>
@@ -80,6 +90,11 @@
                 </div>
             </div>
             @error('password') <span style="color: red; font-size: 12px;">{{ $message }}</span> @enderror
+            @else
+            <div class="alert-info" style="background: #cfe2ff; color: #084298; padding: 12px; border-radius: 8px; margin: 15px 0;">
+                <i class="fas fa-info-circle"></i> La contraseña y el correo solo pueden ser cambiados por el administrador.
+            </div>
+            @endif
 
             <button type="submit" class="btn-guardar">
                 <i class="fas fa-save"></i> Guardar Cambios

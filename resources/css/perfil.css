@@ -41,7 +41,8 @@
     margin: 0 auto;
     cursor: pointer;
     transition: all 0.3s;
-    border: 3px solid var(--azul-marino);
+    color: white;
+    font-weight: bold;
 }
 
 .foto-perfil-default i {
@@ -217,4 +218,22 @@ body.dark-mode .toggle-password:hover {
 
 body.dark-mode .foto-perfil-default {
     background: #2a3a6f;
+}
+
+.alert-info {
+    background: #cfe2ff;
+    color: #084298;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 15px 0;
+    font-size: 13px;
+}
+
+.alert-info i {
+    margin-right: 8px;
+}
+
+body.dark-mode .alert-info {
+    background: #1a3a5c;
+    color: #90caf9;
 }

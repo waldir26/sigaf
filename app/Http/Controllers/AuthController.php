@@ -22,9 +22,17 @@ class AuthController extends Controller
         // Buscar usuario por correo
         $usuario = \App\Models\Usuario::where('correo', $request->correo)->first();
 
-        if ($usuario && $usuario->contrasena === $request->contrasena) {
+        // Verificar si el usuario existe, la contraseña es correcta Y el estado es activo
+        if ($usuario && password_verify($request->contrasena, $usuario->contrasena) && $usuario->estado == 'activo') {
             session(['usuario' => $usuario]);
             return redirect()->intended('/dashboard');
+        }
+
+        // Mensaje de error específico si está inactivo
+        if ($usuario && $usuario->estado == 'inactivo') {
+            return back()->withErrors([
+                'correo' => 'Su cuenta está inactiva. Contacte al administrador.',
+            ]);
         }
 
         return back()->withErrors([

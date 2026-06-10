@@ -60,40 +60,51 @@ class UsuarioController extends Controller
 
     public function update(Request $request, $id)
     {
-        $usuario = Usuario::findOrFail($id);
+        try {
+            $usuario = Usuario::findOrFail($id);
 
-        $request->validate([
-            'nombre' => 'required|max:100',
-            'apellido' => 'required|max:100',
-            'correo' => 'required|email|unique:usuarios,correo,' . $id . ',id_usuario',
-            'usuario' => 'required|unique:usuarios,usuario,' . $id . ',id_usuario',
-            'rol' => 'required|in:admin,empleado',
-            'estado' => 'required|in:activo,inactivo',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:1024'
-        ]);
-
-        $data = $request->all();
-
-        if ($request->filled('contrasena')) {
-            $request->validate(['contrasena' => 'min:6']);
-            $data['contrasena'] = bcrypt($request->contrasena);
-        } else {
-            unset($data['contrasena']);
-        }
-
-        if ($request->hasFile('foto')) {
-            if ($usuario->foto && file_exists(public_path($usuario->foto))) {
-                unlink(public_path($usuario->foto));
+            // Solo actualizar los campos que vienen
+            if ($request->has('nombre')) {
+                $usuario->nombre = $request->nombre;
             }
-            $file = $request->file('foto');
-            $nombre = 'usuario_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/usuarios'), $nombre);
-            $data['foto'] = 'uploads/usuarios/' . $nombre;
+            if ($request->has('apellido')) {
+                $usuario->apellido = $request->apellido;
+            }
+            if ($request->has('correo')) {
+                $usuario->correo = $request->correo;
+            }
+            if ($request->has('usuario')) {
+                $usuario->usuario = $request->usuario;
+            }
+            if ($request->has('rol')) {
+                $usuario->rol = $request->rol;
+            }
+            if ($request->has('estado')) {
+                $usuario->estado = $request->estado;
+            }
+
+            // Subir foto
+            if ($request->hasFile('foto')) {
+                if ($usuario->foto && file_exists(public_path($usuario->foto))) {
+                    unlink(public_path($usuario->foto));
+                }
+                $file = $request->file('foto');
+                $nombre = 'usuario_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/usuarios'), $nombre);
+                $usuario->foto = 'uploads/usuarios/' . $nombre;
+            }
+
+            // Actualizar contraseña solo si viene
+            if ($request->filled('contrasena')) {
+                $usuario->contrasena = bcrypt($request->contrasena);
+            }
+
+            $usuario->save();
+
+            return response()->json(['success' => true, 'usuario' => $usuario]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()], 500);
         }
-
-        $usuario->update($data);
-
-        return response()->json(['success' => true, 'usuario' => $usuario]);
     }
 
     public function destroy($id)
@@ -115,6 +126,15 @@ class UsuarioController extends Controller
     public function show($id)
     {
         $usuario = Usuario::findOrFail($id);
-        return response()->json($usuario);
+        return response()->json([
+            'id_usuario' => $usuario->id_usuario,
+            'nombre' => $usuario->nombre,
+            'apellido' => $usuario->apellido,
+            'usuario' => $usuario->usuario,
+            'correo' => $usuario->correo,
+            'rol' => $usuario->rol,
+            'estado' => $usuario->estado,
+            'foto' => $usuario->foto ? asset($usuario->foto) : null
+        ]);
     }
 }

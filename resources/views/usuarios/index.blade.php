@@ -98,8 +98,10 @@
             <div class="form-group" style="text-align: center;">
                 <div class="foto-container">
                     <div class="foto-preview" id="fotoPreview">
-                        <i id="previewIcon" class="fas fa-user"></i>
-                        <img id="previewImg" src="" style="display: none;">
+                        <img id="fotoPreviewImg" src="" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none;">
+                        <div id="fotoPreviewDefault" style="width: 100px; height: 100px; border-radius: 50%; background: #1a2a4f; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user" style="font-size: 40px; color: white;"></i>
+                        </div>
                     </div>
                     <div class="foto-overlay" id="fotoOverlay">
                         <i class="fas fa-camera"></i>

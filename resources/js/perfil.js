@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         newImg.id = 'foto_perfil';
                         newImg.alt = 'Foto';
                         fotoPerfilDefault.parentNode.replaceChild(newImg, fotoPerfilDefault);
-                        location.reload();
                     }
                 };
                 reader.readAsDataURL(e.target.files[0]);
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.justifyContent = 'center';
         modal.style.flexDirection = 'column';
 
-        // Botón de cerrar (X)
         const closeBtn = document.createElement('div');
         closeBtn.innerHTML = '<i class="fas fa-times"></i>';
         closeBtn.style.position = 'absolute';
@@ -81,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
         closeBtn.style.display = 'flex';
         closeBtn.style.alignItems = 'center';
         closeBtn.style.justifyContent = 'center';
-        closeBtn.style.transition = 'all 0.3s';
 
         closeBtn.addEventListener('mouseenter', () => {
             closeBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
@@ -96,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
         img.style.maxWidth = '90%';
         img.style.maxHeight = '90%';
         img.style.borderRadius = '10px';
-        img.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
 
         modal.appendChild(closeBtn);
         modal.appendChild(img);
@@ -122,6 +118,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (fotoDefaultVer) {
         fotoDefaultVer.addEventListener('click', function () {
             showNotification('No hay foto de perfil para ver', 'info');
+        });
+    }
+
+    // FORZAR ACTUALIZACIÓN DE LA FOTO DESPUÉS DE GUARDAR
+    const perfilForm = document.getElementById('perfilForm');
+    if (perfilForm) {
+        perfilForm.addEventListener('submit', function () {
+            setTimeout(function () {
+                location.reload();
+            }, 500);
         });
     }
 });
