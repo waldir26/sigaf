@@ -31,7 +31,9 @@ export default defineConfig({
                 'resources/css/ventas.css',
                 'resources/js/ventas.js',
                 'resources/css/gastos.css',
-                'resources/js/gastos.js'
+                'resources/js/gastos.js',
+                'resources/css/perfil.css',
+                'resources/js/perfil.js'
             ],
             refresh: true,
         }),
