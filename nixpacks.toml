@@ -1,2 +1,2 @@
 [phases.setup]
-nixPkgs = ["nodejs_18", "php", "composer"]
+nixPkgs = ["nodejs_22", "php", "composer"]
