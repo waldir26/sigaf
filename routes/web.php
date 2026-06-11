@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramaController;
@@ -15,19 +17,25 @@ use App\Http\Controllers\GastoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 
+// ========== RATE LIMITING PARA LOGIN (protección contra fuerza bruta) ==========
+RateLimiter::for('login', function ($request) {
+    return Limit::perMinute(5)->by($request->ip());
+});
+
 // Redirigir raíz al login
 Route::get('/', function () {
     return redirect('/login');
 });
 
+// ========== RUTAS DE AUTENTICACIÓN ==========
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login'); // 5 intentos por minuto
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Ruta protegida
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth.custom')->name('dashboard');
 
-// Rutas de programas, escuelas, participantes e inscripciones
+// ========== RUTAS PROTEGIDAS POR AUTENTICACIÓN ==========
 Route::middleware('auth.custom')->group(function () {
     // ========== PROGRAMAS ==========
     Route::get('/programas', [ProgramaController::class, 'index'])->name('programas.index');
@@ -79,7 +87,7 @@ Route::middleware('auth.custom')->group(function () {
     // ========== DONANTES ==========
     Route::post('/donantes', [DonacionController::class, 'storeDonante'])->name('donantes.store');
 
-    //subir douemnto escanedo y sellado
+    // ========== SUBIR DOCUMENTO ESCANEADO Y SELLADO ==========
     Route::post('/donaciones/{id}/subir-sellado', [DonacionController::class, 'subirDocumentoSellado'])->name('donaciones.subirSellado');
 
     // ========== SERVICIOS Y ACTIVIDADES ==========
@@ -113,7 +121,7 @@ Route::middleware('auth.custom')->group(function () {
     Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index')->middleware('auth.custom');
     Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update')->middleware('auth.custom');
 
-    // ========== USUARIOS (solo admin) ==========
+    // ========== USUARIOS (solo admin - protegido por rol en el controlador) ==========
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{id}', [UsuarioController::class, 'show'])->name('usuarios.show');

@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
+    // Proteger todas las acciones: solo admin puede acceder
+    public function __construct()
+    {
+        if (!session('usuario') || session('usuario')->rol != 'admin') {
+            abort(403, 'No autorizado');
+        }
+    }
+
     public function index(Request $request)
     {
         $query = Usuario::query();
