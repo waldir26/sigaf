@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->string('contrasena', 255);
                 $table->enum('rol', ['admin', 'empleado'])->default('empleado');
                 $table->enum('estado', ['activo', 'inactivo'])->default('activo');
+                $table->string('foto', 255)->nullable();
                 $table->timestamps();
             });
         }
