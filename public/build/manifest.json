@@ -1,0 +1,230 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-6OkgEVv0.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/dark-mode.css": {
+    "file": "assets/dark-mode-CC3pB48c.css",
+    "src": "resources/css/dark-mode.css",
+    "isEntry": true,
+    "name": "dark-mode",
+    "names": [
+      "dark-mode.css"
+    ]
+  },
+  "resources/css/dashboard-custom.css": {
+    "file": "assets/dashboard-custom-CcQMkCZ1.css",
+    "src": "resources/css/dashboard-custom.css",
+    "isEntry": true,
+    "name": "dashboard-custom",
+    "names": [
+      "dashboard-custom.css"
+    ]
+  },
+  "resources/css/dashboard.css": {
+    "file": "assets/dashboard-7y521jsz.css",
+    "src": "resources/css/dashboard.css",
+    "isEntry": true,
+    "name": "dashboard",
+    "names": [
+      "dashboard.css"
+    ]
+  },
+  "resources/css/donaciones.css": {
+    "file": "assets/donaciones-BD2GMBus.css",
+    "src": "resources/css/donaciones.css",
+    "isEntry": true,
+    "name": "donaciones",
+    "names": [
+      "donaciones.css"
+    ]
+  },
+  "resources/css/escuelas.css": {
+    "file": "assets/escuelas-XeKUoP6p.css",
+    "src": "resources/css/escuelas.css",
+    "isEntry": true,
+    "name": "escuelas",
+    "names": [
+      "escuelas.css"
+    ]
+  },
+  "resources/css/gastos.css": {
+    "file": "assets/gastos-B8QuZSxl.css",
+    "src": "resources/css/gastos.css",
+    "isEntry": true,
+    "name": "gastos",
+    "names": [
+      "gastos.css"
+    ]
+  },
+  "resources/css/inscripciones.css": {
+    "file": "assets/inscripciones-CblsXhPl.css",
+    "src": "resources/css/inscripciones.css",
+    "isEntry": true,
+    "name": "inscripciones",
+    "names": [
+      "inscripciones.css"
+    ]
+  },
+  "resources/css/inventario.css": {
+    "file": "assets/inventario-BOptNX99.css",
+    "src": "resources/css/inventario.css",
+    "isEntry": true,
+    "name": "inventario",
+    "names": [
+      "inventario.css"
+    ]
+  },
+  "resources/css/login.css": {
+    "file": "assets/login-3b4mcgVi.css",
+    "src": "resources/css/login.css",
+    "isEntry": true,
+    "name": "login",
+    "names": [
+      "login.css"
+    ]
+  },
+  "resources/css/participantes.css": {
+    "file": "assets/participantes-CuJEdOXF.css",
+    "src": "resources/css/participantes.css",
+    "isEntry": true,
+    "name": "participantes",
+    "names": [
+      "participantes.css"
+    ]
+  },
+  "resources/css/perfil.css": {
+    "file": "assets/perfil-BQnSoTWU.css",
+    "src": "resources/css/perfil.css",
+    "isEntry": true,
+    "name": "perfil",
+    "names": [
+      "perfil.css"
+    ]
+  },
+  "resources/css/programas.css": {
+    "file": "assets/programas-PN1DMOHm.css",
+    "src": "resources/css/programas.css",
+    "isEntry": true,
+    "name": "programas",
+    "names": [
+      "programas.css"
+    ]
+  },
+  "resources/css/servicios.css": {
+    "file": "assets/servicios-D5Ypbd_R.css",
+    "src": "resources/css/servicios.css",
+    "isEntry": true,
+    "name": "servicios",
+    "names": [
+      "servicios.css"
+    ]
+  },
+  "resources/css/usuarios.css": {
+    "file": "assets/usuarios-DF-46Ulh.css",
+    "src": "resources/css/usuarios.css",
+    "isEntry": true,
+    "name": "usuarios",
+    "names": [
+      "usuarios.css"
+    ]
+  },
+  "resources/css/ventas.css": {
+    "file": "assets/ventas-DHJv2DiR.css",
+    "src": "resources/css/ventas.css",
+    "isEntry": true,
+    "name": "ventas",
+    "names": [
+      "ventas.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DsbP9Jus.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/dashboard-charts.js": {
+    "file": "assets/dashboard-charts-BmgewcGs.js",
+    "name": "dashboard-charts",
+    "src": "resources/js/dashboard-charts.js",
+    "isEntry": true
+  },
+  "resources/js/dashboard.js": {
+    "file": "assets/dashboard-DgK2h_mj.js",
+    "name": "dashboard",
+    "src": "resources/js/dashboard.js",
+    "isEntry": true
+  },
+  "resources/js/donaciones.js": {
+    "file": "assets/donaciones-DzV663Zk.js",
+    "name": "donaciones",
+    "src": "resources/js/donaciones.js",
+    "isEntry": true
+  },
+  "resources/js/escuelas.js": {
+    "file": "assets/escuelas-CORBTwit.js",
+    "name": "escuelas",
+    "src": "resources/js/escuelas.js",
+    "isEntry": true
+  },
+  "resources/js/gastos.js": {
+    "file": "assets/gastos-CsAQjDaO.js",
+    "name": "gastos",
+    "src": "resources/js/gastos.js",
+    "isEntry": true
+  },
+  "resources/js/inscripciones.js": {
+    "file": "assets/inscripciones-kJmfdQ-v.js",
+    "name": "inscripciones",
+    "src": "resources/js/inscripciones.js",
+    "isEntry": true
+  },
+  "resources/js/inventario.js": {
+    "file": "assets/inventario-fs2HWUUU.js",
+    "name": "inventario",
+    "src": "resources/js/inventario.js",
+    "isEntry": true
+  },
+  "resources/js/participantes.js": {
+    "file": "assets/participantes-N9xW3Mnp.js",
+    "name": "participantes",
+    "src": "resources/js/participantes.js",
+    "isEntry": true
+  },
+  "resources/js/perfil.js": {
+    "file": "assets/perfil-CdmtOrQb.js",
+    "name": "perfil",
+    "src": "resources/js/perfil.js",
+    "isEntry": true
+  },
+  "resources/js/programas.js": {
+    "file": "assets/programas-vYhPVUB1.js",
+    "name": "programas",
+    "src": "resources/js/programas.js",
+    "isEntry": true
+  },
+  "resources/js/servicios.js": {
+    "file": "assets/servicios-BOnNwWvL.js",
+    "name": "servicios",
+    "src": "resources/js/servicios.js",
+    "isEntry": true
+  },
+  "resources/js/usuarios.js": {
+    "file": "assets/usuarios-BPN5666y.js",
+    "name": "usuarios",
+    "src": "resources/js/usuarios.js",
+    "isEntry": true
+  },
+  "resources/js/ventas.js": {
+    "file": "assets/ventas-DA3Q2eEC.js",
+    "name": "ventas",
+    "src": "resources/js/ventas.js",
+    "isEntry": true
+  }
+}
