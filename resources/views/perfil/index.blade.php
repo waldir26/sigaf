@@ -77,7 +77,7 @@
                 <div class="form-group">
                     <label><i class="fas fa-lock"></i> Nueva Contraseña</label>
                     <div class="password-wrapper">
-                        <input type="password" name="password" id="password" placeholder="Dejar en blanco para no cambiar">
+                        <input type="password" name="password" id="password" placeholder="Escriba su nueva contraseña">
                         <i class="fas fa-eye toggle-password" data-target="password"></i>
                     </div>
                 </div>
