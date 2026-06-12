@@ -35,7 +35,8 @@ export default defineConfig({
                 'resources/css/perfil.css',
                 'resources/js/perfil.js',
                 'resources/css/usuarios.css',
-                'resources/js/usuarios.js'
+                'resources/js/usuarios.js',
+                'resources/js/notify.js',
             ],
             refresh: true,
         }),

@@ -124,7 +124,7 @@
         </main>
     </div>
 
-    @vite('resources/js/dashboard.js')
+    @vite(['resources/js/notify.js', 'resources/js/dashboard.js'])
     @yield('scripts')
 
 </body>

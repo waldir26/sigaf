@@ -1,4 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Función de notificación
+    function showNotification(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'warning':
+                icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
+                break;
+            default:
+                icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
+        }
+
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-content">${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
     const modal = document.getElementById('modalEscuela');
     const modalEliminar = document.getElementById('modalEliminar');
     const form = document.getElementById('formEscuela');
@@ -51,10 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function() {
+        btnGuardar.addEventListener('click', async function () {
             const id = document.getElementById('escuela_id').value;
             const isEdit = id && id !== '';
-            
+
             const data = {
                 nombre_escuela: document.getElementById('nombre_escuela').value,
                 director: document.getElementById('director').value,
@@ -63,9 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 id_programa: document.getElementById('id_programa').value,
                 _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
+
             let url, method;
-            
+
             if (isEdit) {
                 url = `/escuelas/${id}`;
                 method = 'PUT';
@@ -73,11 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 url = '/escuelas';
                 method = 'POST';
             }
-            
+
             try {
                 const response = await fetch(url, {
                     method: method,
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -117,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmarEliminar.addEventListener('click', async () => {
             const response = await fetch(`/escuelas/${eliminarId}`, {
                 method: 'DELETE',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }

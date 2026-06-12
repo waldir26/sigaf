@@ -1,4 +1,41 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    // Función de notificación
+    function showNotification(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'warning':
+                icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
+                break;
+            default:
+                icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
+        }
+
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-content">${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
     const modal = document.getElementById('modalUsuario');
     const modalEliminar = document.getElementById('modalEliminar');
     const form = document.getElementById('formUsuario');
@@ -233,7 +270,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cancelarEliminar) cancelarEliminar.addEventListener('click', cerrarModales);
 
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function () {
+        btnGuardar.addEventListener('click', async function (e) {
+            e.preventDefault();
+
             const id = document.getElementById('usuario_id').value;
             const isEdit = id && id !== '';
 
@@ -247,39 +286,32 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
             const contrasena = document.getElementById('contrasena').value;
-            if (contrasena) {
-                formData.append('contrasena', contrasena);
-            }
+            if (contrasena) formData.append('contrasena', contrasena);
+            if (isEdit) formData.append('_method', 'PUT');
 
             const foto = document.getElementById('fotoInput').files[0];
-            if (foto) {
-                formData.append('foto', foto);
-            }
-
-            if (isEdit) {
-                formData.append('_method', 'PUT');
-            }
+            if (foto) formData.append('foto', foto);
 
             let url = isEdit ? `/usuarios/${id}` : '/usuarios';
 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
                     body: formData
                 });
                 const result = await response.json();
+
                 if (result.success) {
                     showNotification(isEdit ? 'Usuario actualizado con éxito' : 'Usuario creado con éxito', 'success');
+                    cerrarModales();
                     setTimeout(() => location.reload(), 1000);
                 } else {
                     showNotification(result.message || 'Error al guardar', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showNotification('Error al guardar', 'error');
+                showNotification('Error de conexión', 'error');
             }
         });
     }
@@ -326,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const passwordGroup = document.getElementById('passwordGroup');
             if (passwordGroup) {
                 const label = passwordGroup.querySelector('label');
-                if (label) label.innerHTML = 'Contraseña';
+                if (label) label.innerHTML = 'Contraseña (dejar en blanco para no cambiar)';
             }
 
             modal.style.display = 'flex';

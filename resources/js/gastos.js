@@ -1,4 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Función de notificación
+    function showNotification(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'warning':
+                icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
+                break;
+            default:
+                icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
+        }
+
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-content">${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
     const modal = document.getElementById('modalGasto');
     const modalEliminar = document.getElementById('modalEliminar');
     const btnNuevo = document.getElementById('btnNuevo');
@@ -84,71 +121,70 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelarModal) cancelarModal.addEventListener('click', cerrarModales);
     if (cancelarEliminar) cancelarEliminar.addEventListener('click', cerrarModales);
 
-    // Guardar Gasto
     // Guardar Gasto (Crear o Editar)
-if (btnGuardar) {
-    btnGuardar.addEventListener('click', function() {
-        const id = document.getElementById('gasto_id').value;
-        const isEdit = id && id !== '';
-        
-        const categoria = document.getElementById('categoria').value;
-        const descripcion = document.getElementById('descripcion').value;
-        const fecha = document.getElementById('fecha').value;
-        const monto = document.getElementById('monto').value;
-        
-        if (!categoria) { showNotification('La categoría es obligatoria', 'error'); return; }
-        if (!fecha) { showNotification('La fecha es obligatoria', 'error'); return; }
-        if (!monto || monto <= 0) { showNotification('El monto debe ser mayor a 0', 'error'); return; }
-        
-        let url = isEdit ? `/gastos/${id}` : '/gastos';
-        let method = isEdit ? 'PUT' : 'POST';
-        
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                categoria: categoria,
-                descripcion: descripcion,
-                fecha: fecha,
-                monto: parseFloat(monto)
+    if (btnGuardar) {
+        btnGuardar.addEventListener('click', function () {
+            const id = document.getElementById('gasto_id').value;
+            const isEdit = id && id !== '';
+
+            const categoria = document.getElementById('categoria').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const fecha = document.getElementById('fecha').value;
+            const monto = document.getElementById('monto').value;
+
+            if (!categoria) { showNotification('La categoría es obligatoria', 'error'); return; }
+            if (!fecha) { showNotification('La fecha es obligatoria', 'error'); return; }
+            if (!monto || monto <= 0) { showNotification('El monto debe ser mayor a 0', 'error'); return; }
+
+            let url = isEdit ? `/gastos/${id}` : '/gastos';
+            let method = isEdit ? 'PUT' : 'POST';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    categoria: categoria,
+                    descripcion: descripcion,
+                    fecha: fecha,
+                    monto: parseFloat(monto)
+                })
             })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                showNotification(isEdit ? 'Gasto actualizado con éxito' : 'Gasto registrado con éxito', 'success');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showNotification(result.message || 'Error al guardar', 'error');
-            }
-        })
-        .catch(error => {
-            showNotification('Error de conexión', 'error');
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showNotification(isEdit ? 'Gasto actualizado con éxito' : 'Gasto registrado con éxito', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        showNotification(result.message || 'Error al guardar', 'error');
+                    }
+                })
+                .catch(error => {
+                    showNotification('Error de conexión', 'error');
+                });
         });
-    });
-}
+    }
 
     // Editar, Eliminar, PDF
-    document.body.addEventListener('click', async function(e) {
+    document.body.addEventListener('click', async function (e) {
         const btnEditar = e.target.closest('.btn-editar');
         const btnEliminar = e.target.closest('.btn-eliminar');
         const btnPdf = e.target.closest('.btn-pdf');
-        
+
         if (btnEditar) {
             const id = btnEditar.dataset.id;
             const response = await fetch(`/gastos/${id}`);
             const data = await response.json();
             abrirModal('editar', data);
         }
-        
+
         if (btnEliminar) {
             eliminarId = btnEliminar.dataset.id;
             modalEliminar.style.display = 'flex';
         }
-        
+
         if (btnPdf) {
             const id = btnPdf.dataset.id;
             window.open(`/gastos/${id}/pdf`, '_blank');
@@ -159,7 +195,7 @@ if (btnGuardar) {
         confirmarEliminar.addEventListener('click', async () => {
             const response = await fetch(`/gastos/${eliminarId}`, {
                 method: 'DELETE',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }

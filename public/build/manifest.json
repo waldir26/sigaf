@@ -162,37 +162,43 @@
     "isEntry": true
   },
   "resources/js/donaciones.js": {
-    "file": "assets/donaciones-DzV663Zk.js",
+    "file": "assets/donaciones-DzjtXVuM.js",
     "name": "donaciones",
     "src": "resources/js/donaciones.js",
     "isEntry": true
   },
   "resources/js/escuelas.js": {
-    "file": "assets/escuelas-CORBTwit.js",
+    "file": "assets/escuelas-DHmxcGDi.js",
     "name": "escuelas",
     "src": "resources/js/escuelas.js",
     "isEntry": true
   },
   "resources/js/gastos.js": {
-    "file": "assets/gastos-CsAQjDaO.js",
+    "file": "assets/gastos-J2suFyb5.js",
     "name": "gastos",
     "src": "resources/js/gastos.js",
     "isEntry": true
   },
   "resources/js/inscripciones.js": {
-    "file": "assets/inscripciones-kJmfdQ-v.js",
+    "file": "assets/inscripciones-j_JkoJsE.js",
     "name": "inscripciones",
     "src": "resources/js/inscripciones.js",
     "isEntry": true
   },
   "resources/js/inventario.js": {
-    "file": "assets/inventario-fs2HWUUU.js",
+    "file": "assets/inventario-B_hyTDZ_.js",
     "name": "inventario",
     "src": "resources/js/inventario.js",
     "isEntry": true
   },
+  "resources/js/notify.js": {
+    "file": "assets/notify-GW1WFk8k.js",
+    "name": "notify",
+    "src": "resources/js/notify.js",
+    "isEntry": true
+  },
   "resources/js/participantes.js": {
-    "file": "assets/participantes-N9xW3Mnp.js",
+    "file": "assets/participantes-CX1LhlJg.js",
     "name": "participantes",
     "src": "resources/js/participantes.js",
     "isEntry": true
@@ -204,25 +210,25 @@
     "isEntry": true
   },
   "resources/js/programas.js": {
-    "file": "assets/programas-vYhPVUB1.js",
+    "file": "assets/programas-U4Ori-Xu.js",
     "name": "programas",
     "src": "resources/js/programas.js",
     "isEntry": true
   },
   "resources/js/servicios.js": {
-    "file": "assets/servicios-BOnNwWvL.js",
+    "file": "assets/servicios-BLzbL2it.js",
     "name": "servicios",
     "src": "resources/js/servicios.js",
     "isEntry": true
   },
   "resources/js/usuarios.js": {
-    "file": "assets/usuarios-BPN5666y.js",
+    "file": "assets/usuarios-CWDjt_pR.js",
     "name": "usuarios",
     "src": "resources/js/usuarios.js",
     "isEntry": true
   },
   "resources/js/ventas.js": {
-    "file": "assets/ventas-DA3Q2eEC.js",
+    "file": "assets/ventas-D2o9GJMT.js",
     "name": "ventas",
     "src": "resources/js/ventas.js",
     "isEntry": true

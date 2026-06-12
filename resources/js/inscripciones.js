@@ -1,4 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Función de notificación
+    function showNotification(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'warning':
+                icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
+                break;
+            default:
+                icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
+        }
+
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-content">${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
     const modal = document.getElementById('modalInscripcion');
     const modalEliminar = document.getElementById('modalEliminar');
     const form = document.getElementById('formInscripcion');
@@ -13,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar/ocultar campo escuela según tipo de inscripción
     const tipoSelect = document.getElementById('tipo_inscripcion');
     const escuelaGroup = document.getElementById('escuelaGroup');
-    
+
     function toggleEscuelaField() {
         if (tipoSelect && tipoSelect.value === 'escolar') {
             escuelaGroup.style.display = 'block';
@@ -28,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function abrirModal(titulo, data = null) {
         const modalTitulo = document.getElementById('modalTitulo');
         const participanteSection = document.getElementById('participanteSection');
-        
+
         if (titulo === 'crear') {
             modalTitulo.innerHTML = '<i class="fas fa-plus-circle"></i> Nueva Inscripción';
             form.reset();
@@ -94,16 +131,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function(e) {
+        btnGuardar.addEventListener('click', async function (e) {
             e.preventDefault();
-            
+
             const id = document.getElementById('inscripcion_id').value;
             const isEdit = id && id !== '';
-            
+
             let data;
             let url;
             let method;
-            
+
             if (isEdit) {
                 data = {
                     id_programa: document.getElementById('id_programa').value,
@@ -134,11 +171,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 url = '/inscripciones';
                 method = 'POST';
             }
-            
+
             try {
                 const response = await fetch(url, {
                     method: method,
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -178,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmarEliminar.addEventListener('click', async () => {
             const response = await fetch(`/inscripciones/${eliminarId}`, {
                 method: 'DELETE',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }

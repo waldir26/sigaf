@@ -1,4 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Función de notificación
+    function showNotification(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle" style="font-size: 18px;"></i>';
+                break;
+            case 'warning':
+                icon = '<i class="fas fa-exclamation-triangle" style="font-size: 18px;"></i>';
+                break;
+            default:
+                icon = '<i class="fas fa-info-circle" style="font-size: 18px;"></i>';
+        }
+
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-content">${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
     const modal = document.getElementById('modalDonacion');
     const modalDonante = document.getElementById('modalDonante');
     const modalEliminar = document.getElementById('modalEliminar');
@@ -19,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const tipoSelect = document.getElementById('tipo_donacion');
     const montoGroup = document.getElementById('montoGroup');
-    
+
     function toggleMontoField() {
         if (tipoSelect && tipoSelect.value === 'monetaria') {
             montoGroup.style.display = 'block';
@@ -30,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('monto').value = '';
         }
     }
-    
+
     if (tipoSelect) {
         tipoSelect.addEventListener('change', toggleMontoField);
         toggleMontoField();
@@ -48,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const btnBuscar = document.getElementById('btnBuscar');
     const btnLimpiar = document.getElementById('btnLimpiar');
-    
+
     function aplicarFiltros() {
         let url = '/donaciones?';
         const params = [];
@@ -60,11 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filtroOrden && filtroOrden.value) params.push(`orden=${filtroOrden.value}`);
         window.location.href = url + params.join('&');
     }
-    
+
     function limpiarFiltros() {
         window.location.href = '/donaciones';
     }
-    
+
     function exportarReporte() {
         let url = '/donaciones/exportar/reporte?';
         const params = [];
@@ -72,11 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filtroDonante && filtroDonante.value) params.push(`donante_id=${filtroDonante.value}`);
         if (filtroFechaDesde && filtroFechaDesde.value) params.push(`fecha_desde=${filtroFechaDesde.value}`);
         if (filtroFechaHasta && filtroFechaHasta.value) params.push(`fecha_hasta=${filtroFechaHasta.value}`);
-        
-        // Abrir en nueva pestaña
+
         window.open(url + params.join('&'), '_blank');
     }
-    
+
     if (btnAplicarFiltros) btnAplicarFiltros.addEventListener('click', aplicarFiltros);
     if (btnLimpiarFiltros) btnLimpiarFiltros.addEventListener('click', limpiarFiltros);
     if (btnExportarReporte) btnExportarReporte.addEventListener('click', exportarReporte);
@@ -123,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnNuevo) btnNuevo.addEventListener('click', () => abrirModal('crear'));
     if (btnNuevoEmpty) btnNuevoEmpty.addEventListener('click', () => abrirModal('crear'));
     if (btnNuevoDonante) btnNuevoDonante.addEventListener('click', abrirModalDonante);
-    
+
     if (cerrarModal) cerrarModal.addEventListener('click', cerrarModales);
     if (cerrarDonanteModal) cerrarDonanteModal.addEventListener('click', cerrarModales);
     if (cancelarModal) cancelarModal.addEventListener('click', cerrarModales);
@@ -131,10 +167,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cancelarEliminar) cancelarEliminar.addEventListener('click', cerrarModales);
 
     if (btnGuardar) {
-        btnGuardar.addEventListener('click', async function() {
+        btnGuardar.addEventListener('click', async function () {
             const id = document.getElementById('donacion_id').value;
             const isEdit = id && id !== '';
-            
+
             const data = {
                 id_donante: document.getElementById('id_donante').value,
                 tipo_donacion: document.getElementById('tipo_donacion').value,
@@ -143,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fecha: document.getElementById('fecha').value,
                 _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
+
             let url, method;
             if (isEdit) {
                 url = `/donaciones/${id}`;
@@ -152,11 +188,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 url = '/donaciones';
                 method = 'POST';
             }
-            
+
             try {
                 const response = await fetch(url, {
                     method: method,
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -177,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (btnGuardarDonante) {
-        btnGuardarDonante.addEventListener('click', async function() {
+        btnGuardarDonante.addEventListener('click', async function () {
             const data = {
                 nombre: document.getElementById('donante_nombre').value,
                 telefono: document.getElementById('donante_telefono').value,
@@ -185,11 +221,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 direccion: document.getElementById('donante_direccion').value,
                 _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
+
             try {
                 const response = await fetch('/donantes', {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
@@ -198,14 +234,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const result = await response.json();
                 if (result.success) {
                     showNotification('Donante creado con éxito', 'success');
-                    
+
                     const donanteSelect = document.getElementById('id_donante');
                     const newOption = document.createElement('option');
                     newOption.value = result.donante.id_donante;
                     newOption.textContent = result.donante.nombre;
                     donanteSelect.appendChild(newOption);
                     donanteSelect.value = result.donante.id_donante;
-                    
+
                     document.getElementById('formDonante').reset();
                     modalDonante.style.display = 'none';
                 } else {
@@ -219,23 +255,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Eventos para botones dinámicos (editar, eliminar, pdf)
-    document.body.addEventListener('click', async function(e) {
+    document.body.addEventListener('click', async function (e) {
         const btnEditar = e.target.closest('.btn-editar');
         const btnEliminar = e.target.closest('.btn-eliminar');
         const btnPdf = e.target.closest('.btn-pdf');
-        
+
         if (btnEditar) {
             const id = btnEditar.dataset.id;
             const response = await fetch(`/donaciones/${id}`);
             const data = await response.json();
             abrirModal('editar', data);
         }
-        
+
         if (btnEliminar) {
             eliminarId = btnEliminar.dataset.id;
             modalEliminar.style.display = 'flex';
         }
-        
+
         if (btnPdf) {
             const id = btnPdf.dataset.id;
             window.open(`/donaciones/${id}/pdf`, '_blank');
@@ -246,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmarEliminar.addEventListener('click', async () => {
             const response = await fetch(`/donaciones/${eliminarId}`, {
                 method: 'DELETE',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
@@ -261,14 +297,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Subir documento sellado - con delegación de eventos
+    // Subir documento sellado
     const modalSellado = document.getElementById('modalSubirSellado');
     const cerrarSelladoModal = document.getElementById('cerrarSelladoModal');
     const cancelarSelladoModal = document.getElementById('cancelarSelladoModal');
     const btnGuardarSellado = document.getElementById('btnGuardarSellado');
 
-    // Delegación de eventos para botón subir sellado
-    document.body.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function (e) {
         const btn = e.target.closest('.btn-subir-sellado');
         if (btn) {
             const id = btn.dataset.id;
@@ -290,19 +325,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (btnGuardarSellado) {
-        btnGuardarSellado.addEventListener('click', async function() {
+        btnGuardarSellado.addEventListener('click', async function () {
             const id = document.getElementById('donacion_sellado_id').value;
             const fileInput = document.getElementById('documento_sellado');
-            
+
             if (!fileInput.files[0]) {
                 showNotification('Seleccione un archivo', 'warning');
                 return;
             }
-            
+
             const formData = new FormData();
             formData.append('documento_sellado', fileInput.files[0]);
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-            
+
             try {
                 const response = await fetch(`/donaciones/${id}/subir-sellado`, {
                     method: 'POST',
