@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const passwordGroup = document.getElementById('passwordGroup');
             if (passwordGroup) {
                 const label = passwordGroup.querySelector('label');
-                if (label) label.innerHTML = 'Contraseña (dejar en blanco para no cambiar)';
+                if (label) label.innerHTML = 'Contraseña';
             }
 
             modal.style.display = 'flex';
