@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\RateLimiter;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramaController;
@@ -17,10 +16,7 @@ use App\Http\Controllers\GastoController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\UsuarioController;
 
-// ========== RATE LIMITING PARA LOGIN (protección contra fuerza bruta) ==========
-RateLimiter::for('login', function ($request) {
-    return Limit::perMinute(5)->by($request->ip());
-});
+
 
 // Redirigir raíz al login
 Route::get('/', function () {
