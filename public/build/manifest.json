@@ -18,7 +18,7 @@
     ]
   },
   "resources/css/dashboard-custom.css": {
-    "file": "assets/dashboard-custom-CcQMkCZ1.css",
+    "file": "assets/dashboard-custom-xbez03Sd.css",
     "src": "resources/css/dashboard-custom.css",
     "isEntry": true,
     "name": "dashboard-custom",
@@ -27,7 +27,7 @@
     ]
   },
   "resources/css/dashboard.css": {
-    "file": "assets/dashboard-7y521jsz.css",
+    "file": "assets/dashboard-Af7oyMeL.css",
     "src": "resources/css/dashboard.css",
     "isEntry": true,
     "name": "dashboard",
@@ -81,7 +81,7 @@
     ]
   },
   "resources/css/login.css": {
-    "file": "assets/login-3b4mcgVi.css",
+    "file": "assets/login-BE2ev801.css",
     "src": "resources/css/login.css",
     "isEntry": true,
     "name": "login",
@@ -156,7 +156,7 @@
     "isEntry": true
   },
   "resources/js/dashboard.js": {
-    "file": "assets/dashboard-DgK2h_mj.js",
+    "file": "assets/dashboard-DvlSf22C.js",
     "name": "dashboard",
     "src": "resources/js/dashboard.js",
     "isEntry": true

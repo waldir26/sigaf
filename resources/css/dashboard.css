@@ -43,25 +43,25 @@ body {
 }
 
 .sidebar-logo {
-    padding: 5px 5px;
+    padding: 20px;
     text-align: center;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .sidebar-logo img {
-    max-width: 1350px;
+    max-width: 120px;
     width: 100%;
 }
 
 .sidebar-menu {
     flex: 1;
-    padding: 30px 0;
+    padding: 20px 0;
 }
 
 .menu-item {
     display: flex;
     align-items: center;
-    padding: 12px 25px;
+    padding: 10px 20px;
     color: var(--gris-oscuro);
     text-decoration: none;
     transition: all 0.3s;
@@ -81,7 +81,7 @@ body {
 
 .menu-item:hover {
     background: rgba(26, 42, 79, 0.08);
-    padding-left: 30px;
+    padding-left: 25px;
 }
 
 .menu-item:hover i,
@@ -107,7 +107,7 @@ body {
 }
 
 .menu-section-title {
-    padding: 10px 25px;
+    padding: 10px 20px;
     font-size: 11px;
     text-transform: uppercase;
     color: var(--gris-medio);
@@ -125,7 +125,7 @@ body {
     gap: 12px;
     color: var(--gris-oscuro);
     text-decoration: none;
-    padding: 12px 25px;
+    padding: 10px 20px;
     width: 100%;
     background: none;
     border: none;
@@ -156,37 +156,38 @@ body {
 
 .top-navbar {
     background: var(--blanco);
-    padding: 15px 30px;
+    padding: 12px 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 25px;
+    gap: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: all 0.3s;
+    flex-wrap: wrap;
 }
 
 .datetime {
     color: var(--gris-medio);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: var(--azul-marino);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .user-info i {
-    font-size: 20px;
+    font-size: 18px;
     color: var(--azul-marino);
 }
 
 .theme-toggle {
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     color: var(--gris-medio);
     transition: all 0.3s;
     background: none;
@@ -198,8 +199,266 @@ body {
 }
 
 .content-page {
-    padding: 30px;
+    padding: 20px;
     background: var(--gris-claro);
-    min-height: calc(100vh - 70px);
+    min-height: calc(100vh - 60px);
     transition: background 0.3s;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+
+    .main-content {
+        margin-left: 240px;
+    }
+
+    .menu-item span {
+        font-size: 13px;
+    }
+
+    .sidebar-logo img {
+        max-width: 100px;
+    }
+}
+
+/* Móviles grandes (576px - 768px) */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 220px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .top-navbar {
+        justify-content: space-between;
+    }
+
+    .datetime {
+        font-size: 10px;
+    }
+
+    .user-info span {
+        font-size: 12px;
+    }
+
+    .content-page {
+        padding: 15px;
+    }
+
+    /* Botón hamburguesa */
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--azul-marino);
+        cursor: pointer;
+        margin-right: 10px;
+    }
+}
+
+/* Móviles pequeños (menos de 576px) */
+@media (max-width: 576px) {
+    .top-navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+
+    .datetime {
+        display: none;
+    }
+
+    .user-info span {
+        display: none;
+    }
+
+    .content-page {
+        padding: 10px;
+    }
+
+    .menu-item {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .menu-item i {
+        font-size: 16px;
+    }
+
+    .menu-section-title {
+        padding: 8px 15px;
+        font-size: 10px;
+    }
+
+    .sidebar-logo {
+        padding: 15px;
+    }
+
+    .sidebar-logo img {
+        max-width: 80px;
+    }
+}
+
+/* Botón hamburguesa (por defecto oculto) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--azul-marino);
+    cursor: pointer;
+}
+
+/* Mostrar botón hamburguesa en móviles */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .top-navbar {
+        justify-content: flex-start;
+    }
+}
+
+/* Botón hamburguesa */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--azul-marino);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .top-navbar {
+        justify-content: flex-start;
+        gap: 15px;
+    }
+}
+
+/* Eliminar scroll horizontal en móvil */
+@media (max-width: 768px) {
+
+    body,
+    .dashboard-container,
+    .main-content,
+    .content-page {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .content-page {
+        padding: 10px;
+        overflow-x: hidden;
+    }
+
+    .cards-container,
+    .charts-container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Botón cerrar sidebar (solo visible en móvil) */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--azul-marino);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar-logo {
+        position: relative;
+    }
+
+    .sidebar-close {
+        display: block;
+    }
+}
+
+/* ========== RESPONSIVE PARA TABLAS ========== */
+
+/* Contenedor de tablas con scroll horizontal en móvil */
+.table-container,
+div[class$="-table-container"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Tablas con ancho mínimo para que no se deformen */
+table,
+table[class$="-table"] {
+    min-width: 600px;
+    width: 100%;
+}
+
+/* Celdas más compactas en móvil */
+@media (max-width: 768px) {
+
+    .table-container,
+    div[class$="-table-container"] {
+        overflow-x: auto;
+    }
+
+    table,
+    table[class$="-table"] {
+        min-width: 550px;
+    }
+
+    th,
+    td {
+        padding: 8px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    /* Botones de acción más pequeños */
+    .btn-accion {
+        font-size: 14px;
+        padding: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    th,
+    td {
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+
+    .btn-accion {
+        font-size: 12px;
+    }
 }

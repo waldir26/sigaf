@@ -55,7 +55,14 @@
     border-collapse: collapse;
     background: white;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    display: block;
+}
+
+.movimientos-table thead,
+.movimientos-table tbody {
+    display: table;
+    width: 100%;
 }
 
 .movimientos-table th {
@@ -76,6 +83,7 @@
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
+    display: inline-block;
 }
 
 .badge-gasto {
@@ -84,6 +92,7 @@
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 12px;
+    display: inline-block;
 }
 
 .charts-container {
@@ -124,4 +133,159 @@ body.dark-mode .card-value {
 body.dark-mode .movimientos-table td {
     border-bottom-color: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.8);
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablets */
+@media (max-width: 992px) {
+    .cards-container {
+        gap: 15px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card-value {
+        font-size: 24px;
+    }
+
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Móviles - 1 columna */
+@media (max-width: 768px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .card-icon {
+        font-size: 24px;
+        margin-bottom: 0;
+        width: 40px;
+    }
+
+    .card-title {
+        font-size: 12px;
+        margin-bottom: 0;
+        flex: 1;
+        padding-left: 10px;
+    }
+
+    .card-value {
+        font-size: 18px;
+        text-align: right;
+    }
+
+    .card-value div {
+        font-size: 10px !important;
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .section-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .charts-container {
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .chart-box {
+        padding: 12px;
+    }
+
+    .chart-box h3 {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .movimientos-table th,
+    .movimientos-table td {
+        padding: 8px;
+        font-size: 10px;
+    }
+
+    .badge-ingreso,
+    .badge-gasto {
+        padding: 2px 8px;
+        font-size: 9px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .cards-container {
+        gap: 10px;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .card-icon {
+        font-size: 20px;
+        width: 35px;
+    }
+
+    .card-title {
+        font-size: 11px;
+    }
+
+    .card-value {
+        font-size: 16px;
+    }
+
+    .movimientos-table th,
+    .movimientos-table td {
+        padding: 6px;
+        font-size: 9px;
+    }
+}
+
+/* Escritorio grande */
+@media (min-width: 1200px) {
+    .cards-container {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Eliminar scroll horizontal en móvil - Dashboard */
+@media (max-width: 768px) {
+
+    .cards-container,
+    .charts-container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .chart-box {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .movimientos-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
 }
