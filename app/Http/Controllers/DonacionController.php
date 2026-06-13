@@ -7,7 +7,6 @@ use App\Models\Donacion;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
 
 class DonacionController extends Controller
 {
@@ -176,7 +175,6 @@ class DonacionController extends Controller
             'dpi' => 96,
         ]);
 
-        // stream() abre en el navegador, download() descarga directamente
         return $pdf->stream('donacion_' . $donacion->id_donacion . '.pdf');
     }
 
@@ -231,26 +229,22 @@ class DonacionController extends Controller
             $file = $request->file('documento_sellado');
             $nombre = 'donacion_sellada_' . $donacion->id_donacion . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-            // Forzamos la ruta al almacenamiento que Railway sí permite escribir
-            $destino = storage_path('app/public');
-
+            $destino = public_path('documentos_sellados');
             if (!file_exists($destino)) {
-                @mkdir($destino, 0777, true);
+                @mkdir($destino, 0775, true);
             }
 
-            // Aquí es donde podría estar tronando
             $file->move($destino, $nombre);
 
-            $donacion->documento_sellado = 'storage/' . $nombre;
+            $donacion->documento_sellado = 'documentos_sellados/' . $nombre;
             $donacion->estado_sellado = 'sellado';
             $donacion->save();
 
             return response()->json(['success' => true, 'message' => 'Documento sellado subido correctamente']);
         } catch (\Exception $e) {
-            // En lugar de ocultar el error, devolvemos el mensaje real de lo que falló
             return response()->json([
                 'success' => false,
-                'message' => 'Error real del servidor: ' . $e->getMessage()
+                'message' => 'Error en el servidor: ' . $e->getMessage()
             ], 500);
         }
     }
