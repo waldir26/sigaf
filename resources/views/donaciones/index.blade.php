@@ -43,9 +43,9 @@
                 <select id="filtroDonante" class="filtro-select">
                     <option value="">Todos</option>
                     @foreach($donantes as $donante)
-                        <option value="{{ $donante->id_donante }}" {{ request('donante_id') == $donante->id_donante ? 'selected' : '' }}>
-                            {{ $donante->nombre }}
-                        </option>
+                    <option value="{{ $donante->id_donante }}" {{ request('donante_id') == $donante->id_donante ? 'selected' : '' }}>
+                        {{ $donante->nombre }}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -83,75 +83,79 @@
     <div class="donaciones-table-container">
         <table class="donaciones-table">
             <thead>
-    <tr>
-        <th>ID</th>
-        <th>Donante</th>
-        <th>Tipo</th>
-        <th>Monto</th>
-        <th>Fecha</th>
-        <th>Estado Sello</th>
-        <th style="text-align: center">Acciones</th>
-    </tr>
-        </thead>
-        <tbody>
-            @forelse($donaciones as $donacion)
-            <tr data-id="{{ $donacion->id_donacion }}">
-                <td>{{ $donacion->id_donacion }}</td>
-                <td><strong>{{ $donacion->donante->nombre ?? 'N/A' }}</strong></td>
-                <td>
-                    <span class="tipo-badge tipo-{{ $donacion->tipo_donacion }}">
-                        {{ $donacion->tipo_donacion == 'monetaria' ? 'Monetaria' : 'En especie' }}
-                    </span>
-                </td>
-                <td>
-                    @if($donacion->tipo_donacion == 'monetaria')
+                <tr>
+                    <th>ID</th>
+                    <th>Donante</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
+                    <th>Estado Sello</th>
+                    <th style="text-align: center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($donaciones as $donacion)
+                <tr data-id="{{ $donacion->id_donacion }}">
+                    <td>{{ $donacion->id_donacion }}</td>
+                    <td><strong>{{ $donacion->donante->nombre ?? 'N/A' }}</strong></td>
+                    <td>
+                        <span class="tipo-badge tipo-{{ $donacion->tipo_donacion }}">
+                            {{ $donacion->tipo_donacion == 'monetaria' ? 'Monetaria' : 'En especie' }}
+                        </span>
+                    </td>
+                    <td>
+                        @if($donacion->tipo_donacion == 'monetaria')
                         ${{ number_format($donacion->monto, 2, '.', ',') }}
-                    @else
+                        @else
                         -
-                    @endif
-                </td>
-                <td>{{ $donacion->fecha }}</td>
-                <td>
-                    @if($donacion->estado_sellado == 'sellado')
+                        @endif
+                    </td>
+                    <td>{{ $donacion->fecha }}</td>
+                    <td>
+                        @if($donacion->estado_sellado == 'sellado')
                         <span style="background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
                             <i class="fas fa-check-circle"></i> Sellado
                         </span>
-                    @else
+                        @else
                         <span style="background: #fff3cd; color: #856404; padding: 4px 12px; border-radius: 20px; font-size: 12px;">
                             <i class="fas fa-clock"></i> Pendiente
                         </span>
-                    @endif
-                </td>
-                <td style="text-align: center">
-                    <button class="btn-accion btn-pdf" data-id="{{ $donacion->id_donacion }}" title="Exportar PDF" style="color: #dc3545;">
-                        <i class="fas fa-file-pdf"></i>
-                    </button>
-                    @if($donacion->estado_sellado == 'sellado')
-                        <a href="{{ asset($donacion->documento_sellado) }}" target="_blank" class="btn-accion" style="color: #17a2b8;" title="Ver sellado">
-                            <i class="fas fa-stamp"></i>
-                        </a>
-                    @else
-                        <button class="btn-accion btn-subir-sellado" data-id="{{ $donacion->id_donacion }}" title="Subir documento sellado" style="color: #28a745;">
+                        @endif
+                    </td>
+                    <td style="text-align: center">
+                        <button class="btn-accion btn-pdf" data-id="{{ $donacion->id_donacion }}" title="Exportar PDF" style="color: #dc3545;">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+
+                        <!-- Botón para subir/reemplazar documento sellado (SIEMPRE VISIBLE) -->
+                        <button class="btn-accion btn-subir-sellado" data-id="{{ $donacion->id_donacion }}" title="Subir/Reemplazar documento sellado" style="color: #28a745;">
                             <i class="fas fa-upload"></i>
                         </button>
-                    @endif
-                    <button class="btn-accion btn-editar" data-id="{{ $donacion->id_donacion }}" title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn-accion btn-eliminar" data-id="{{ $donacion->id_donacion }}" title="Eliminar">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="7" style="text-align: center; padding: 40px;">No hay donaciones registradas</td>
-            </tr>
-            @endforelse
-        </tbody>
+
+                        <!-- Botón para ver documento sellado (solo si existe) -->
+                        @if($donacion->documento_sellado)
+                        <a href="{{ asset($donacion->documento_sellado) }}" target="_blank" class="btn-accion" style="color: #17a2b8;" title="Ver documento sellado">
+                            <i class="fas fa-stamp"></i>
+                        </a>
+                        @endif
+
+                        <button class="btn-accion btn-editar" data-id="{{ $donacion->id_donacion }}" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-accion btn-eliminar" data-id="{{ $donacion->id_donacion }}" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px;">No hay donaciones registradas</td>
+                </tr>
+                @endforelse
+            </tbody>
         </table>
     </div>
-    
+
     <div class="pagination">
         {{ $donaciones->appends([
             'search' => request('search'),
@@ -174,20 +178,20 @@
         <form id="formDonacion">
             @csrf
             <input type="hidden" id="donacion_id" name="donacion_id">
-            
+
             <div class="form-group">
                 <label>Donante *</label>
                 <select id="id_donante" name="id_donante" required style="width: 70%; display: inline-block;">
                     <option value="">Seleccionar donante</option>
                     @foreach($donantes as $donante)
-                        <option value="{{ $donante->id_donante }}">{{ $donante->nombre }}</option>
+                    <option value="{{ $donante->id_donante }}">{{ $donante->nombre }}</option>
                     @endforeach
                 </select>
                 <button type="button" id="btnNuevoDonante" style="width: 28%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">
                     <i class="fas fa-plus"></i> Nuevo
                 </button>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label>Tipo *</label>
@@ -201,17 +205,17 @@
                     <input type="number" id="monto" name="monto" step="0.01" min="0" placeholder="0.00">
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Descripción</label>
                 <textarea id="descripcion" name="descripcion" rows="2" placeholder="Descripción de la donación..."></textarea>
             </div>
-            
+
             <div class="form-group">
                 <label>Fecha *</label>
                 <input type="date" id="fecha" name="fecha" required>
             </div>
-            
+
             <div class="modal-buttons">
                 <button type="button" id="cancelarModal" class="btn-cancelar">Cancelar</button>
                 <button type="button" id="btnGuardarDonacion" class="btn-guardar">Guardar</button>
@@ -276,13 +280,13 @@
         <form id="formSubirSellado" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="donacion_sellado_id" name="donacion_id">
-            
+
             <div class="form-group">
                 <label>Documento Sellado (PDF, JPG, PNG) *</label>
                 <input type="file" id="documento_sellado" name="documento_sellado" accept=".pdf,.jpg,.jpeg,.png" required>
                 <small style="font-size: 10px; color: #6c7a8a;">Máximo 5MB. Suba el comprobante impreso y sellado.</small>
             </div>
-            
+
             <div class="modal-buttons">
                 <button type="button" id="cancelarSelladoModal" class="btn-cancelar">Cancelar</button>
                 <button type="button" id="btnGuardarSellado" class="btn-guardar">Subir</button>

@@ -7,6 +7,7 @@ use App\Models\Donacion;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class DonacionController extends Controller
 {
@@ -219,14 +220,18 @@ class DonacionController extends Controller
 
         $donacion = Donacion::findOrFail($id);
 
+        // 1. Borrar el archivo viejo si existía en la carpeta pública física
         if ($donacion->documento_sellado && file_exists(public_path($donacion->documento_sellado))) {
             unlink(public_path($donacion->documento_sellado));
         }
 
         $file = $request->file('documento_sellado');
         $nombre = 'donacion_sellada_' . $donacion->id_donacion . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        // 2. MOVER DIRECTAMENTE A LA CARPETA PÚBLICA FÍSICA (public/documentos_sellados)
         $file->move(public_path('documentos_sellados'), $nombre);
 
+        // 3. Guardamos la ruta limpia
         $donacion->documento_sellado = 'documentos_sellados/' . $nombre;
         $donacion->estado_sellado = 'sellado';
         $donacion->save();
