@@ -228,10 +228,16 @@ class DonacionController extends Controller
         $file = $request->file('documento_sellado');
         $nombre = 'donacion_sellada_' . $donacion->id_donacion . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        // 2. MOVER DIRECTAMENTE A LA CARPETA PÚBLICA FÍSICA (public/documentos_sellados)
-        $file->move(public_path('documentos_sellados'), $nombre);
+        // --- NUEVO: Crear la carpeta automáticamente si Railway no la tiene ---
+        $destino = public_path('documentos_sellados');
+        if (!file_exists($destino)) {
+            mkdir($destino, 0775, true);
+        }
+        // ----------------------------------------------------------------------
 
-        // 3. Guardamos la ruta limpia
+        // Ahora sí, movemos el archivo con seguridad
+        $file->move($destino, $nombre);
+
         $donacion->documento_sellado = 'documentos_sellados/' . $nombre;
         $donacion->estado_sellado = 'sellado';
         $donacion->save();
