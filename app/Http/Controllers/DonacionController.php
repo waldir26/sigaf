@@ -214,54 +214,44 @@ class DonacionController extends Controller
 
     public function subirDocumentoSellado(Request $request, $id)
     {
-        $request->validate([
-            'documento_sellado' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'
-        ]);
+        try {
+            $request->validate([
+                'documento_sellado' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'
+            ]);
 
-        $donacion = Donacion::findOrFail($id);
+            $donacion = Donacion::findOrFail($id);
 
-        // 1. Intentar borrar el archivo viejo si existía física o simbólicamente
-        if ($donacion->documento_sellado) {
-            $rutaFisica = public_path($donacion->documento_sellado);
-            if (file_exists($rutaFisica)) {
-                @unlink($rutaFisica);
+            if ($donacion->documento_sellado) {
+                $rutaFisica = public_path($donacion->documento_sellado);
+                if (file_exists($rutaFisica)) {
+                    @unlink($rutaFisica);
+                }
             }
-        }
 
-        $file = $request->file('documento_sellado');
-        $nombre = 'donacion_sellada_' . $donacion->id_donacion . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file = $request->file('documento_sellado');
+            $nombre = 'donacion_sellada_' . $donacion->id_donacion . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-        // 2. LA SOLUCIÓN DE EMERGENCIA PARA PRODUCCIÓN:
-        // Si estamos en Railway (producción), guardamos en la carpeta temporal que sí tiene permisos compartidos
-        // Si estamos en local, usamos la carpeta public normal.
-        if (env('RAILWAY_ENVIRONMENT') || !is_writable(public_path())) {
-            // En producción creamos un enlace directo o usamos /tmp si el contenedor es ultra estricto.
-            // Pero para no romper tu botón asset(), usaremos el almacenamiento temporal del sistema
-            $destino = '/tmp';
+            // Forzamos la ruta al almacenamiento que Railway sí permite escribir
+            $destino = storage_path('app/public');
+
+            if (!file_exists($destino)) {
+                @mkdir($destino, 0777, true);
+            }
+
+            // Aquí es donde podría estar tronando
             $file->move($destino, $nombre);
 
-            // Creamos una ruta que simule el acceso o guardamos el binario. 
-            // Como es para una presentación de materia, si Railway bloquea la escritura en public,
-            // la vieja confiable es inyectar un enlace simbólico temporal por comando o usar Base64.
+            $donacion->documento_sellado = 'storage/' . $nombre;
+            $donacion->estado_sellado = 'sellado';
+            $donacion->save();
 
-            // Probemos primero moviendo directo a la carpeta de almacenamiento de la app que SÍ es escribible en Railway por defecto:
-            $destino = storage_path('app/public');
-        } else {
-            $destino = public_path('documentos_sellados');
+            return response()->json(['success' => true, 'message' => 'Documento sellado subido correctamente']);
+        } catch (\Exception $e) {
+            // En lugar de ocultar el error, devolvemos el mensaje real de lo que falló
+            return response()->json([
+                'success' => false,
+                'message' => 'Error real del servidor: ' . $e->getMessage()
+            ], 500);
         }
-
-        // Código unificado que NO falla en storage_path ni en public_path local
-        if (!file_exists($destino)) {
-            @mkdir($destino, 0777, true);
-        }
-
-        $file->move($destino, $nombre);
-
-        // Guardamos la ruta relativa para que el asset() la encuentre mediante el puente que Railway ya tiene configurado por defecto
-        $donacion->documento_sellado = env('RAILWAY_ENVIRONMENT') ? 'storage/' . $nombre : 'documentos_sellados/' . $nombre;
-        $donacion->estado_sellado = 'sellado';
-        $donacion->save();
-
-        return response()->json(['success' => true, 'message' => 'Documento sellado subido correctamente']);
     }
 }
