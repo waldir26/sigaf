@@ -6,7 +6,7 @@ use App\Models\Donante;
 use App\Models\Donacion;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DonacionController extends Controller
 {
@@ -72,7 +72,6 @@ class DonacionController extends Controller
 
         $donacion = Donacion::create($request->all());
 
-        // Insertar en movimientos_financieros solo si es monetaria
         if ($donacion->tipo_donacion == 'monetaria' && $donacion->monto > 0) {
             MovimientoFinanciero::create([
                 'tipo' => 'Ingreso',
@@ -99,12 +98,8 @@ class DonacionController extends Controller
         ]);
 
         $donacion = Donacion::findOrFail($id);
-        $montoAnterior = $donacion->monto;
-        $tipoAnterior = $donacion->tipo_donacion;
-
         $donacion->update($request->all());
 
-        // Actualizar movimiento financiero si existe
         $movimiento = MovimientoFinanciero::where('tabla_referencia', 'donaciones')
             ->where('id_referencia', $donacion->id_donacion)
             ->first();
@@ -140,7 +135,6 @@ class DonacionController extends Controller
     {
         $donacion = Donacion::findOrFail($id);
 
-        // Eliminar movimiento financiero asociado
         MovimientoFinanciero::where('tabla_referencia', 'donaciones')
             ->where('id_referencia', $donacion->id_donacion)
             ->delete();
@@ -172,9 +166,17 @@ class DonacionController extends Controller
     {
         $donacion = Donacion::with('donante')->findOrFail($id);
 
-        return Pdf::view('donaciones.pdf', compact('donacion'))
-            ->format('a4')
-            ->name('donacion_' . $donacion->id_donacion . '.pdf');
+        $pdf = Pdf::loadView('donaciones.pdf', compact('donacion'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        // stream() abre en el navegador, download() descarga directamente
+        return $pdf->stream('donacion_' . $donacion->id_donacion . '.pdf');
     }
 
     public function exportReporte(Request $request)
@@ -197,9 +199,16 @@ class DonacionController extends Controller
         $donaciones = $query->orderBy('fecha', 'desc')->get();
         $totalMonetario = $donaciones->where('tipo_donacion', 'monetaria')->sum('monto');
 
-        return Pdf::view('donaciones.reporte', compact('donaciones', 'totalMonetario'))
-            ->format('a4')
-            ->name('reporte_donaciones_' . date('Y-m-d') . '.pdf');
+        $pdf = Pdf::loadView('donaciones.reporte', compact('donaciones', 'totalMonetario'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('reporte_donaciones_' . date('Y-m-d') . '.pdf');
     }
 
     public function subirDocumentoSellado(Request $request, $id)
