@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Venta;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class VentaController extends Controller
 {
@@ -13,18 +13,15 @@ class VentaController extends Controller
     {
         $query = Venta::query();
 
-        // Buscador general
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('articulo', 'LIKE', "%{$search}%");
         }
 
-        // Filtro por artículo (select)
         if ($request->has('articulo') && $request->articulo != '') {
             $query->where('articulo', $request->articulo);
         }
 
-        // Filtros de fecha
         if ($request->has('fecha_desde') && $request->fecha_desde != '') {
             $query->whereDate('fecha', '>=', $request->fecha_desde);
         }
@@ -32,7 +29,6 @@ class VentaController extends Controller
             $query->whereDate('fecha', '<=', $request->fecha_hasta);
         }
 
-        // Ordenamiento
         $orden = $request->get('orden', 'fecha_desc');
         switch ($orden) {
             case 'fecha_asc':
@@ -52,7 +48,6 @@ class VentaController extends Controller
         $ventas = $query->paginate(15);
         $totalIngresos = Venta::sum('monto');
 
-        // Artículos únicos para el select de filtro
         $articulosUnicos = Venta::select('articulo')->distinct()->pluck('articulo');
 
         return view('ventas.index', compact('ventas', 'totalIngresos', 'articulosUnicos'));
@@ -68,7 +63,6 @@ class VentaController extends Controller
 
         $venta = Venta::create($request->all());
 
-        // Insertar en movimientos_financieros
         MovimientoFinanciero::create([
             'tipo' => 'Ingreso',
             'origen' => 'Venta',
@@ -93,7 +87,6 @@ class VentaController extends Controller
         $venta = Venta::findOrFail($id);
         $venta->update($request->all());
 
-        // Actualizar movimiento financiero
         $movimiento = MovimientoFinanciero::where('tabla_referencia', 'ventas_bienes')
             ->where('id_referencia', $venta->id_venta)
             ->first();
@@ -123,7 +116,6 @@ class VentaController extends Controller
     {
         $venta = Venta::findOrFail($id);
 
-        // Eliminar movimiento financiero asociado
         MovimientoFinanciero::where('tabla_referencia', 'ventas_bienes')
             ->where('id_referencia', $venta->id_venta)
             ->delete();
@@ -142,9 +134,16 @@ class VentaController extends Controller
     {
         $venta = Venta::findOrFail($id);
 
-        return Pdf::view('ventas.pdf', compact('venta'))
-            ->format('a4')
-            ->name('comprobante_venta_' . $venta->id_venta . '.pdf');
+        $pdf = Pdf::loadView('ventas.pdf', compact('venta'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('comprobante_venta_' . $venta->id_venta . '.pdf');
     }
 
     public function exportReporte(Request $request)
@@ -164,8 +163,15 @@ class VentaController extends Controller
         $ventas = $query->orderBy('fecha', 'desc')->get();
         $totalIngresos = $ventas->sum('monto');
 
-        return Pdf::view('ventas.reporte', compact('ventas', 'totalIngresos'))
-            ->format('a4')
-            ->name('reporte_ventas_' . date('Y-m-d') . '.pdf');
+        $pdf = Pdf::loadView('ventas.reporte', compact('ventas', 'totalIngresos'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('reporte_ventas_' . date('Y-m-d') . '.pdf');
     }
 }

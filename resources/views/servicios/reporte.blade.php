@@ -22,12 +22,12 @@
             margin: 0 auto;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            border: 1px solid #e0e0e0;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a2a4f, #2a3a6f);
+            background: #1a2a4f;
             padding: 20px;
             text-align: center;
             color: white;
@@ -57,16 +57,17 @@
         }
 
         .resumen {
-            display: flex;
-            justify-content: space-between;
+            display: table;
+            width: 100%;
             padding: 15px 20px;
             background: #f8f9fa;
             border-bottom: 1px solid #e0e0e0;
         }
 
         .resumen-card {
+            display: table-cell;
             text-align: center;
-            flex: 1;
+            width: 50%;
         }
 
         .resumen-card .label {
@@ -120,7 +121,7 @@
     $fechaEmision = date('d/m/Y g:i:s A'); ?>
     <div class="reporte">
         <div class="header">
-            <img src="{{ public_path('images/logo.png') }}" class="logo" alt="Logo">
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" class="logo" alt="Logo">
             <h1 class="titulo">FUSALMO</h1>
             <p class="subtitulo">Fundación Salvador del Mundo</p>
         </div>

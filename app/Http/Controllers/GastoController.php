@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gasto;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GastoController extends Controller
 {
@@ -142,9 +142,17 @@ class GastoController extends Controller
     public function exportPdf($id)
     {
         $gasto = Gasto::findOrFail($id);
-        return Pdf::view('gastos.pdf', compact('gasto'))
-            ->format('a4')
-            ->name('comprobante_gasto_' . $gasto->id_gasto . '.pdf');
+
+        $pdf = Pdf::loadView('gastos.pdf', compact('gasto'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('comprobante_gasto_' . $gasto->id_gasto . '.pdf');
     }
 
     public function exportReporte(Request $request)
@@ -164,8 +172,15 @@ class GastoController extends Controller
         $gastos = $query->orderBy('fecha', 'desc')->get();
         $totalGastos = $gastos->sum('monto');
 
-        return Pdf::view('gastos.reporte', compact('gastos', 'totalGastos'))
-            ->format('a4')
-            ->name('reporte_gastos_' . date('Y-m-d') . '.pdf');
+        $pdf = Pdf::loadView('gastos.reporte', compact('gastos', 'totalGastos'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('reporte_gastos_' . date('Y-m-d') . '.pdf');
     }
 }

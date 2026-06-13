@@ -22,15 +22,15 @@
             margin: 0 auto;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             min-height: 90vh;
             display: flex;
             flex-direction: column;
+            border: 1px solid #e0e0e0;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a2a4f, #2a3a6f);
+            background: #1a2a4f;
             padding: 30px;
             text-align: center;
             color: white;
@@ -129,7 +129,7 @@
     $fechaEmision = date('d/m/Y g:i:s A'); ?>
     <div class="comprobante">
         <div class="header">
-            <img src="{{ public_path('images/logo.png') }}" class="logo" alt="Logo">
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/logo.png'))) }}" class="logo" alt="Logo">
             <h1 class="titulo">FUSALMO</h1>
             <p class="subtitulo">Fundación Salvador del Mundo</p>
         </div>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Servicio;
 use App\Models\MovimientoFinanciero;
 use Illuminate\Http\Request;
-use Spatie\LaravelPdf\Facades\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ServicioController extends Controller
 {
@@ -71,7 +71,6 @@ class ServicioController extends Controller
 
         $servicio = Servicio::create($request->all());
 
-        // Insertar en movimientos_financieros
         MovimientoFinanciero::create([
             'tipo' => 'Ingreso',
             'origen' => 'Servicio',
@@ -98,7 +97,6 @@ class ServicioController extends Controller
         $servicio = Servicio::findOrFail($id);
         $servicio->update($request->all());
 
-        // Actualizar movimiento financiero
         $movimiento = MovimientoFinanciero::where('tabla_referencia', 'servicios_actividades')
             ->where('id_referencia', $servicio->id_servicio)
             ->first();
@@ -128,7 +126,6 @@ class ServicioController extends Controller
     {
         $servicio = Servicio::findOrFail($id);
 
-        // Eliminar movimiento financiero asociado
         MovimientoFinanciero::where('tabla_referencia', 'servicios_actividades')
             ->where('id_referencia', $servicio->id_servicio)
             ->delete();
@@ -147,9 +144,16 @@ class ServicioController extends Controller
     {
         $servicio = Servicio::findOrFail($id);
 
-        return Pdf::view('servicios.pdf', compact('servicio'))
-            ->format('a4')
-            ->name('comprobante_servicio_' . $servicio->id_servicio . '.pdf');
+        $pdf = Pdf::loadView('servicios.pdf', compact('servicio'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('comprobante_servicio_' . $servicio->id_servicio . '.pdf');
     }
 
     public function exportReporte(Request $request)
@@ -172,8 +176,15 @@ class ServicioController extends Controller
         $servicios = $query->orderBy('fecha', 'desc')->get();
         $totalIngresos = $servicios->sum('monto');
 
-        return Pdf::view('servicios.reporte', compact('servicios', 'totalIngresos'))
-            ->format('a4')
-            ->name('reporte_servicios_' . date('Y-m-d') . '.pdf');
+        $pdf = Pdf::loadView('servicios.reporte', compact('servicios', 'totalIngresos'));
+
+        $pdf->setOptions([
+            'defaultFont' => 'sans-serif',
+            'isRemoteEnabled' => true,
+            'isHtml5ParserEnabled' => true,
+            'dpi' => 96,
+        ]);
+
+        return $pdf->stream('reporte_servicios_' . date('Y-m-d') . '.pdf');
     }
 }
